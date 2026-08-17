@@ -43,6 +43,10 @@ Run in this order; each skill hands off a specific file to the next:
 4. If `editor` returns anything short of READY, hand its fix list back to `writer`'s revision
    mode: surgical fixes only to the flagged lines, then back to `editor` for an independent
    re-check. Don't let `writer` self-grade a revision.
+5. Once `editor` returns READY, move the file from `writing/drafts/<slug>.md` to
+   `writing/published/<slug>.md` — this repo's staging area for pieces headed to Medium or
+   dev.to. This is a local move only; see **Not in scope** above — actually posting to either
+   platform still happens outside these skills.
 
 **Triad-scanning boundary:** `editor`'s hard gate is the sole authority on rule-of-three
 sentence structures — zero tolerance, checked exhaustively. `writer` used to duplicate this
@@ -115,6 +119,9 @@ Keep the file under ~150 lines (per `profile/SKILL.md`) — it's a working refer
   (refresh mode merges in new evidence rather than discarding prior analysis).
 - `writing/drafts/<slug>.md` — one file per draft; `writer` creates, `editor` grades in place,
   `writer`'s revision mode overwrites the same file rather than creating a new one.
+- `writing/published/<slug>.md` — drafts that cleared `editor` with a READY verdict, staged
+  for Medium or dev.to. Moved here from `writing/drafts/`, not copied — a slug lives in one
+  place at a time.
 
 ## Autonomous vs. Ask-First
 
