@@ -77,8 +77,9 @@ flatter true sentence, or a visible `[PLACEHOLDER]`, beats a smooth invented one
 Avoiding AI-sounding prose is the reason this plugin exists (see `plugin.json`'s description),
 not just one check among many. The canonical pattern list lives in
 `plugins/ghostwriter/skills/editor/SKILL.md` under **Hedging & directness**,
-**Overused-word clusters**, and **Formatting & mechanical tells** — that's the authoritative,
-maintained list; read it there rather than trusting a copy here that could drift out of sync.
+**Agency & construction**, **Overused-word clusters**, and **Formatting & mechanical tells** —
+that's the authoritative, maintained list; read it there rather than trusting a copy here that
+could drift out of sync.
 
 `profile`'s persona-specific **AI-tell checklist** section can override a hit on this general
 list — e.g. a persona that documents heavy em-dash use isn't penalized for em dashes just
