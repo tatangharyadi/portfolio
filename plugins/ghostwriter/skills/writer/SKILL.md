@@ -50,6 +50,12 @@ these while composing:
   `[PLACEHOLDER]`, never a filled-in guess — a flatter true sentence beats a smooth invented
   one.
 
+- **Self-check**: before calling the draft done, ask "What in this draft would make a
+  skeptical reader say it's AI-generated?" and answer in one line — if you can name
+  something, fix it now rather than leaving it for the `editor` skill to catch. Then
+  re-confirm the fabrication scan above is still clean; a fix made since that scan can
+  reintroduce an unmarked claim.
+
 Only after both scans are clean, do a general pass for ornament density (against the
 `Ornament baseline` line in `writing/persona.md`), hedging, and word clusters.
 

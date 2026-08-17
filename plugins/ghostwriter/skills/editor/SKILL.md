@@ -28,6 +28,25 @@ output. If you find yourself wanting to reclassify a sentence from ORNAMENTED to
 check from FAIL to PASS, without the underlying wording having changed, don't — that's
 rationalizing a pass, not evidence of one.
 
+Skepticism cuts toward AI-tell patterns, not toward the writer's legitimate voice. Before
+flagging any of the following, confirm it's a cluster of tells, not one instance mistaken
+for the whole: polished, grammatically clean prose; mixed casual and formal registers within
+one piece; plain or dry prose with none of the specific tells listed in the scored checks
+below present; a single em
+dash, a single hedge word, or one instance of an "overused" word used correctly; formal or
+technical vocabulary the persona's own samples already show it using; a salutation or sign-
+off; unsourced claims (most writing is unsourced — that alone proves nothing). Weigh these in
+the writer's favor when deciding a borderline check:
+- **Specific, hard-to-fabricate detail** (an exact place, a verbatim odd quote, a precise
+  number) — AI writing rounds these off, so their presence is evidence of a real voice.
+- **Mixed or unresolved feelings** stated plainly, rather than a tidy resolved take.
+- **Uneven sentence rhythm** — genuine variety, not the padded-short/padded-long pattern a
+  check might mistake for it.
+- **A genuine aside, parenthetical, or self-correction mid-thought.**
+Don't let this override a real hit — a single em dash that also completes a rule-of-three and
+a hedge is still worth flagging — but don't manufacture a FAIL to satisfy the skeptical
+mindset when the actual evidence is this thin.
+
 ## Hard gates — checked first, override everything else
 
 If either gate fails, stop: the verdict is NEEDS REVISION, skip the numeric score below, and
@@ -58,8 +77,8 @@ go straight to the fix list in Output.
 
 ## Scored checks (only if both gates pass)
 
-Score each 1 (fully present) / 0.5 (partial) / 0 (absent), with quoted evidence. Weights
-sum to 100 with Voice match, 80 without (see Scoring):
+Score each 1 (fully present) / 0.5 (partial) / 0 (absent), with quoted evidence. Weights sum
+to 100:
 
 - **Sentence rhythm & structure** — weight 20. No run of 3+ consecutive sentences within ~5
   words of each other; every paragraph of 3+ sentences needs at least one sentence under 8
@@ -77,20 +96,33 @@ sum to 100 with Voice match, 80 without (see Scoring):
   supports ("Furthermore," "That being said"), stacked qualifiers ("arguably," "in many
   ways"), unearned summary-conclusion paragraphs, hype constructions ("doesn't just X — it
   revolutionizes it"), and a perfectly even register with no controlled imperfection (a
-  fragment, an aside, a blunt line, direct address to the reader). Quote one
-  plainly-committed line and flag any hedges found.
+  fragment, an aside, a blunt line, direct address to the reader). Also flag signposting
+  ("let's dive in," "here's what you need to know"), collaborative-artifact leftovers ("I
+  hope this helps," "let me know if you'd like me to expand"), and sycophantic tone ("great
+  question," "you're absolutely right") — these are chatbot-correspondence habits, not prose.
+  Quote one plainly-committed line and flag any hits found.
 - **Voice match** — weight 20. Check directly against the persona's Imitation checklist (its
   5 most load-bearing traits) and AI-tell checklist (patterns this person's writing does NOT
   contain), plus sentence rhythm, transitions, vocabulary, register, and punctuation
   generally. Any phrase of 4+ consecutive words also appearing verbatim in
   `writing/samples/` is an automatic 0 regardless of everything else — that's copying, not
   style. Name 2 specific persona traits and confirm they appear.
-- **Overused-word clusters** — weight 10. Treat as a hint, not a ban — one flagged word is
+- **Overused-word clusters** — weight 5. Treat as a hint, not a ban — one flagged word is
   fine if it's genuinely the most accurate one; the real tell is a *cluster*, or these
   appearing alongside the patterns above. Watch for: "delve", "tapestry",
   "landscape"/"navigate" (figurative), "embark", "unlock", "elevate", "empower", "seamless",
-  "leverage" (verb), "robust", "testament". Also flag em dash use beyond what the persona's
-  punctuation profile documents. List any hits and justify or remove each.
+  "leverage" (verb), "robust", "testament". List any hits and justify or remove each. Score
+  1 if no unjustified hits, 0.5 for one or two isolated unjustified hits, 0 for a cluster.
+- **Formatting & mechanical tells** — weight 5. Independent of wording, these are
+  near-mechanical to check: em dash or en dash use beyond what the persona's punctuation
+  profile documents (a single em dash is not automatically a hit — check it against the
+  persona's actual frequency first); boldface used as a mechanical emphasis tic rather than
+  sparingly; inline-header bullet lists ("**Label:** sentence" repeated down a list); Title
+  Case In Headings instead of sentence case; emojis decorating headings or bullets; curly
+  quotation marks (" ") stacked with other tells rather than appearing alone (most editors
+  auto-curl, so this one only counts in combination). List every hit with a quote. Score the
+  hits, not the absence: 1 if "0 hits found", 0.5 for one or two isolated hits, 0 for a
+  cluster of hits or any single hit repeated throughout the draft.
 - **Ornament density** — weight 20. Enumerate every sentence in the draft, numbered, tagged
   PLAIN or ORNAMENTED (contains a simile, metaphor, or elevated comparison) — a summary
   ratio alone is not acceptable evidence, show the full numbered list. Compare the ratio to
@@ -115,7 +147,7 @@ state a final score without it.
 This skill grades; it does not rewrite. Produce:
 
 1. A per-check PASS/FAIL/PARTIAL table with the required evidence for each (the two hard
-   gates first, then the six scored checks with weight and weighted result).
+   gates first, then the seven scored checks with weight and weighted result).
 2. A prioritized list of every specific line that needs to change and why — triads and
    ornament density first, since those are the most common and most heavily weighted.
 3. A final verdict: READY, MINOR REVISION, or NEEDS REVISION, with the score shown per
@@ -135,3 +167,6 @@ need another `profile` pass with more samples.
   editing it.
 - Flag, don't silently resolve, anything you're unsure whether the persona would actually
   do — call it out as a specific line in the fix list rather than guessing.
+
+Some of the false-positive guardrails and AI-tell patterns above draw on the humanizer
+project (MIT licensed).
