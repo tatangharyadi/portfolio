@@ -110,7 +110,13 @@ to 100:
   what you need to know"), collaborative-artifact
   leftovers ("I hope this helps," "let me know if you'd like me to expand"), and sycophantic
   tone ("great question," "you're absolutely right") — these are chatbot-correspondence
-  habits, not prose. Quote one plainly-committed line and flag any hits found.
+  habits, not prose. Also flag "turns out"/"it turns out that" used as a reveal pivot
+  ("Turns out the config had a lower timeout") — it manufactures a discovery narrative
+  where a direct statement would do; the fix is dropping the pivot phrase, not the fact
+  itself. Flag announcement sentences of the form "What [verb phrase] was [the revelation]"
+  ("What surprised me was...", "What I didn't expect was...", "The thing I realized was..."),
+  with or without a following colon — the announcement structure is the tell, not the
+  punctuation. Quote one plainly-committed line and flag any hits found.
 - **Voice match** — weight 20. Check directly against the persona's Imitation checklist (its
   5 most load-bearing traits) and AI-tell checklist (patterns this person's writing does NOT
   contain), plus sentence rhythm, transitions, vocabulary, register, and punctuation
@@ -148,7 +154,12 @@ to 100:
   against the `Contraction baseline` line in `writing/persona.md` (if that line is missing
   because the persona predates this check, fall back to judging contraction use against the
   samples cited elsewhere in the file) — a draft that expands contractions the persona
-  normally uses reads as over-formalized AI text. List every hit with a quote. Score the
+  normally uses reads as over-formalized AI text. Flag any semicolon linking two independent
+  clauses in non-academic prose (exception: comma-containing lists, e.g. "Austin, TX; Denver,
+  CO") and any mid-sentence colon preceded by an incomplete clause ("The problem: nobody
+  tests this," "The answer: start earlier") — both read as AI structural habits in casual or
+  narrative prose, check against the persona's own punctuation profile first in case either
+  is a documented habit. List every hit with a quote. Score the
   hits, not the absence: 1 if "0 hits found", 0.5 for one or two isolated hits, 0 for a
   cluster of hits or any single hit repeated throughout the draft.
 - **Ornament density** — weight 20. Enumerate every sentence in the draft, numbered, tagged

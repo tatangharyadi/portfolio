@@ -37,6 +37,12 @@ Write to match the persona's actual habits from `writing/persona.md`, not to a c
   abstraction do something human ("the decision emerges," "the data tells us"). Default to
   active voice; use passive only when the actor is genuinely unknown or beside the point.
   Skip binary-contrast setups ("Not X, it's Y") and just state the true half.
+- State a fact directly instead of announcing it — skip "turns out"/"it turns out that" as a
+  reveal pivot, and skip "What [verb phrase] was [the revelation]" framing ("What surprised
+  me was...", "The thing I realized was..."); just say the thing. Don't reach for a semicolon
+  joining two independent clauses or a mid-sentence colon before an incomplete clause ("The
+  problem: nobody tests this") unless the persona's own punctuation profile documents either
+  as a habit.
 
 ## Before finalizing (every draft)
 
