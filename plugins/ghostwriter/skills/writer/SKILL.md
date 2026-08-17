@@ -33,6 +33,10 @@ Write to match the persona's actual habits from `writing/persona.md`, not to a c
   notes they never use semicolons, don't use semicolons).
 - Reuse their rhetorical moves (direct address, rhetorical questions, anecdote-first, etc.)
   where they fit the content, not on every paragraph.
+- Give actions a named actor — a specific person, or "you" — instead of letting an
+  abstraction do something human ("the decision emerges," "the data tells us"). Default to
+  active voice; use passive only when the actor is genuinely unknown or beside the point.
+  Skip binary-contrast setups ("Not X, it's Y") and just state the true half.
 
 ## Before finalizing (every draft)
 

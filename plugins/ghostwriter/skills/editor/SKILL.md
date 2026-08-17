@@ -35,7 +35,9 @@ one piece; plain or dry prose with none of the specific tells listed in the scor
 below present; a single em
 dash, a single hedge word, or one instance of an "overused" word used correctly; formal or
 technical vocabulary the persona's own samples already show it using; a salutation or sign-
-off; unsourced claims (most writing is unsourced — that alone proves nothing). Weigh these in
+off; unsourced claims (most writing is unsourced — that alone proves nothing); a single
+Wh-opener used as a genuine question rather than a rhetorical setup; one passive-voice
+sentence where the actor is genuinely unknown or irrelevant to the point. Weigh these in
 the writer's favor when deciding a borderline check:
 - **Specific, hard-to-fabricate detail** (an exact place, a verbatim odd quote, a precise
   number) — AI writing rounds these off, so their presence is evidence of a real voice.
@@ -80,7 +82,7 @@ go straight to the fix list in Output.
 Score each 1 (fully present) / 0.5 (partial) / 0 (absent), with quoted evidence. Weights sum
 to 100:
 
-- **Sentence rhythm & structure** — weight 20. No run of 3+ consecutive sentences within ~5
+- **Sentence rhythm & structure** — weight 10. No run of 3+ consecutive sentences within ~5
   words of each other; every paragraph of 3+ sentences needs at least one sentence under 8
   words and one over 25. Within a paragraph, no more than 2 sentences share an opener (same
   first word or same subject-verb-object shape), and consecutive paragraphs shouldn't open
@@ -107,6 +109,19 @@ to 100:
   generally. Any phrase of 4+ consecutive words also appearing verbatim in
   `writing/samples/` is an automatic 0 regardless of everything else — that's copying, not
   style. Name 2 specific persona traits and confirm they appear.
+- **Agency & construction** — weight 10. Flag inanimate or abstract nouns performing human
+  actions ("the complaint becomes a fix," "the data tells us," "the decision emerges," "the
+  market rewards") — name the actual person responsible, or use "you," instead. Flag passive
+  voice with no named actor ("mistakes were made," "it is believed that"). Flag binary-
+  contrast templates ("Not X, it's Y," "The answer isn't X, it's Y," "It feels like X, it's
+  actually Y," "not just X but also Y") — state the true half directly instead of setting up
+  the reversal. Flag sentences opening with a Wh-word (What/When/Where/Which/Who/Why/How)
+  used as a rhetorical setup rather than a genuine question — unless the persona's Openings
+  section documents question-openers as a habitual move, in which case check frequency
+  against that baseline instead of flagging on sight. Also flag narrator-from-a-distance
+  observations floating above the scene instead of naming a person or the reader ("Nobody
+  designed this," "People tend to..."). Quote every hit in full. Score 1 if none, 0.5 for
+  one or two isolated hits, 0 for a cluster.
 - **Overused-word clusters** — weight 5. Treat as a hint, not a ban — one flagged word is
   fine if it's genuinely the most accurate one; the real tell is a *cluster*, or these
   appearing alongside the patterns above. Watch for: "delve", "tapestry",
@@ -147,7 +162,7 @@ state a final score without it.
 This skill grades; it does not rewrite. Produce:
 
 1. A per-check PASS/FAIL/PARTIAL table with the required evidence for each (the two hard
-   gates first, then the seven scored checks with weight and weighted result).
+   gates first, then the eight scored checks with weight and weighted result).
 2. A prioritized list of every specific line that needs to change and why — triads and
    ornament density first, since those are the most common and most heavily weighted.
 3. A final verdict: READY, MINOR REVISION, or NEEDS REVISION, with the score shown per
