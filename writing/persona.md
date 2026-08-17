@@ -1,10 +1,12 @@
 # Voice Persona — tatangharyadi (target voice, Asprin-derived)
 
 Last built: {{date}}
-Confidence: low — structural patterns extracted from short excerpts (~18 pages total) of
-Robert Asprin's *Another Fine Myth* and *Myth Conceptions*, then deliberately recalibrated
-against a target tone rather than copied as-is (see Tone target below). Treat this as a
-working first draft to test against real drafts, not a settled profile.
+Confidence: low — structural patterns extracted from ~23 pages (opening chapters) of
+Robert Asprin's *Another Fine Myth* and *Myth Conceptions*, with contraction and
+ornamentation rates now counted directly against that text rather than estimated, then
+deliberately recalibrated against a target tone rather than copied as-is (see Tone target
+below). Still low confidence — opening chapters of two books, not a cross-section of his
+range — but the baselines below are traced counts, not guesses.
 Source samples: none stored in this repo. Asprin's novels are still in copyright, so raw
 text was not copied into `writing/samples/` — only short (few-word to one-sentence) quotes
 are reproduced below as supporting evidence, and the source PDFs live outside this repo.
@@ -54,17 +56,31 @@ concrete nouns over abstractions. Directly matches the Casual target: contractio
 throughout, no stiff or elevated diction.
 
 ## Punctuation
-Contraction baseline: contracts nearly every time it's grammatically possible — matches the
-Casual target directly; expanded forms ("do not", "cannot") should be rare enough to stand
-out when they appear. Rough estimate: contracts ~85-90% of the time it could.
-Parentheticals for a dry aside, used sparingly. Exclamation points mostly dropped —
-Asprin's dialogue-comedy use of them doesn't fit "mostly serious." Em dashes rare. Ellipses
-dropped — they were a dialogue-hesitation device, not needed in essay prose.
+Contraction baseline: counted directly against first-person narration in both source
+excerpts (dialogue was excluded — dialogue contracts almost universally, e.g. "You'd
+better disguise that dragon, kid," "We've been over it a thousand times," and isn't
+representative of essay-style narration). Narration itself contracts ~60-70% of the time:
+"I didn't," "wasn't," "you're getting ahead of myself" contract freely, but modal-perfect
+constructions stay uncontracted even in the same paragraph — "I probably **would have**
+stayed in bed," "Something **would have** to be done about them" — never "would've" in
+narration, only in dialogue. Rough estimate: contracts ~65% of the time in narration,
+with "would have"/"should have" as the specific holdout that stays expanded. This is
+lower than the earlier 85-90% guess in this file, which was implicitly measuring dialogue.
+Parentheticals for a dry aside, used sparingly — confirmed real: "(hard won and painfully
+endured)" (*Myth Conceptions*, Ch. 1). Exclamation points mostly dropped in narration —
+Asprin's dialogue-comedy use of them doesn't fit "mostly serious." Em dashes rare in
+narration. Ellipses dropped — they were a dialogue-hesitation device, not needed in essay
+prose.
 
 ## Ornamentation
-Ornament baseline: low, roughly 1-in-6 sentences or fewer. Similes only when they sharpen a
-concrete point, never for decoration or atmosphere — this carries over unchanged from the
-source pattern and fits Casual/matter-of-fact directly.
+Ornament baseline: low, roughly 1-in-10 to 1-in-11 sentences — counted directly: 6-7
+ornamented sentences out of ~70-75 narration sentences sampled across both excerpts.
+Confirmed hits: "swapped ends... like a leaf caught in an eddy," "the book snapped shut
+like the jaws of a hungry predator," "fleshed it out with a few strokes of my mental
+paintbrush," "touched a primal chord in the bird's mind," "terrifying enough to make a
+spider-bear faint." Similes only when they sharpen a concrete point, never for decoration
+or atmosphere — this carries over from the source pattern and fits Casual/matter-of-fact
+directly. Tighter than the earlier 1-in-6 guess in this file.
 
 ## Rhetorical moves
 Retuned version of Asprin's core move: state a claim or expectation, then immediately
@@ -92,6 +108,9 @@ better than three.
   sentence.
 - Parenthetical asides used sparingly, dry rather than comic.
 - Self-deprecating honesty stated plainly, with no hedge words softening it.
+- Contracts freely everywhere except modal-perfect constructions ("would have," "should
+  have") — those stay expanded even mid-paragraph next to contracted forms. A controlled
+  formality blip, not an inconsistency to fix.
 
 ## AI-tell checklist (for the editor skill)
 - Does not manufacture enthusiasm or exclamation-heavy energy throughout a piece.
