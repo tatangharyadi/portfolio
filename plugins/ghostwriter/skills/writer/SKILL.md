@@ -43,6 +43,11 @@ Write to match the persona's actual habits from `writing/persona.md`, not to a c
   joining two independent clauses or a mid-sentence colon before an incomplete clause ("The
   problem: nobody tests this") unless the persona's own punctuation profile documents either
   as a habit.
+- Name a source for a claim or cut it — don't launder it through "experts believe" or
+  "research suggests." Don't frame an observation as a revelation nobody else has noticed
+  ("nobody is talking about this"). Use one hedge, not a stacked pair that cancels itself
+  ("could potentially," "may eventually"). Skip social-endorsement closers ("worth your
+  time," "thank me later," bookmark/share prompts).
 
 ## Before finalizing (every draft)
 

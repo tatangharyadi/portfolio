@@ -116,7 +116,17 @@ to 100:
   itself. Flag announcement sentences of the form "What [verb phrase] was [the revelation]"
   ("What surprised me was...", "What I didn't expect was...", "The thing I realized was..."),
   with or without a following colon — the announcement structure is the tell, not the
-  punctuation. Quote one plainly-committed line and flag any hits found.
+  punctuation. Flag vague attribution ("experts believe," "research suggests," "studies
+  show") with no named source — either the source is named or the claim is cut, this
+  overlaps the Accuracy & integrity gate but is worth flagging here too since it's a
+  register tell independent of whether the claim is literally true. Flag novelty inflation
+  ("nobody is talking about this," "this changes everything") presented as revelation
+  instead of one interpretation among others. Flag hedge-stacked predictions where a modal
+  verb and a hedge cancel each other out ("could potentially," "may eventually," "might
+  possibly") — keep one hedge, not two. Flag social endorsement closers ("worth your time,"
+  "thank me later," generic bookmark/share prompts) — chatbot-correspondence habits, not
+  prose, same family as the signposting/sycophancy hits above. Quote one plainly-committed
+  line and flag any hits found.
 - **Voice match** — weight 20. Check directly against the persona's Imitation checklist (its
   5 most load-bearing traits) and AI-tell checklist (patterns this person's writing does NOT
   contain), plus sentence rhythm, transitions, vocabulary, register, and punctuation
