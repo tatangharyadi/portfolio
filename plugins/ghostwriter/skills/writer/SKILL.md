@@ -41,13 +41,12 @@ Write to match the persona's actual habits from `writing/persona.md`, not to a c
 ## Before finalizing (every draft)
 
 Run this as a dedicated last pass, separate from writing itself — do not rely on catching
-these while composing:
+these while composing. Triad scanning is deliberately not on this list: the `editor` skill's
+hard gate does that check exhaustively and with zero tolerance, and this session's evidence
+is that a self-scan run by the same pass that generated the prose misses hits the editor
+catches. Spend this pass on what only the writer is positioned to judge — persona fidelity —
+and let `editor` be the backstop for triads.
 
-- **Triad scan**: reread every sentence for three parallel items or clauses ("X, Y, and Z",
-  "It was A. It was B. It was C.", "X; Y; and Z"), including versions disguised with
-  connectors or ordinal words ("first... then... finally"). This is the single most common
-  failure mode — treat it as such. Rewrite any hit as two items, four items, or one item
-  elaborated at length.
 - **Fabrication scan**: tag every specific factual claim — name, number, date, stat,
   attributed quote. Confirm each one traces to the brief, to `writing/persona.md`, or is
   clearly fictional detail inside an intentionally fictional piece. Anything else becomes
@@ -76,9 +75,9 @@ to a surgical fix instead of rewriting:
    sentence, rewrite only that sentence or clause to fix the specific issue named, and leave
    the sentences around it alone unless the fix forces a small adjustment to the one right
    before or after for the paragraph to still read.
-3. Re-run the triad and fabrication scans above against the whole revised draft — a fix in
-   one place (e.g. cutting one item from a triad) can leave a dangling fragment or create a
-   new parallel structure elsewhere.
+3. Re-run the fabrication scan above against the whole revised draft. If the editor flagged a
+   triad, fix only the quoted line(s) as instructed — don't re-scan the rest of the draft for
+   triads yourself; that's `editor`'s job on the re-check.
 4. Output the full revised draft, not just the changed lines, and save it back to the same
    `writing/drafts/<slug>.md` file.
 5. Below the draft, list each change on one line, naming which flagged issue it addresses.
