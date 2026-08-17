@@ -34,6 +34,47 @@ Write to match the persona's actual habits from `writing/persona.md`, not to a c
 - Reuse their rhetorical moves (direct address, rhetorical questions, anecdote-first, etc.)
   where they fit the content, not on every paragraph.
 
+## Before finalizing (every draft)
+
+Run this as a dedicated last pass, separate from writing itself — do not rely on catching
+these while composing:
+
+- **Triad scan**: reread every sentence for three parallel items or clauses ("X, Y, and Z",
+  "It was A. It was B. It was C.", "X; Y; and Z"), including versions disguised with
+  connectors or ordinal words ("first... then... finally"). This is the single most common
+  failure mode — treat it as such. Rewrite any hit as two items, four items, or one item
+  elaborated at length.
+- **Fabrication scan**: tag every specific factual claim — name, number, date, stat,
+  attributed quote. Confirm each one traces to the brief, to `writing/persona.md`, or is
+  clearly fictional detail inside an intentionally fictional piece. Anything else becomes
+  `[PLACEHOLDER]`, never a filled-in guess — a flatter true sentence beats a smooth invented
+  one.
+
+Only after both scans are clean, do a general pass for ornament density (against the
+`Ornament baseline` line in `writing/persona.md`), hedging, and word clusters.
+
+## Revision mode
+
+If you're handed a draft you wrote plus feedback from the `editor` skill (a per-check
+breakdown, specific flagged lines, or a NEEDS REVISION / MINOR REVISION verdict) — whether
+the editor ran earlier in this same session or the user pasted the feedback back in — switch
+to a surgical fix instead of rewriting:
+
+1. Don't start over. Leave everything the editor didn't flag untouched — rewriting unflagged
+   sentences risks breaking parts that already worked.
+2. Work through the flagged issues in the order given. For each one: quote the problem
+   sentence, rewrite only that sentence or clause to fix the specific issue named, and leave
+   the sentences around it alone unless the fix forces a small adjustment to the one right
+   before or after for the paragraph to still read.
+3. Re-run the triad and fabrication scans above against the whole revised draft — a fix in
+   one place (e.g. cutting one item from a triad) can leave a dangling fragment or create a
+   new parallel structure elsewhere.
+4. Output the full revised draft, not just the changed lines, and save it back to the same
+   `writing/drafts/<slug>.md` file.
+5. Below the draft, list each change on one line, naming which flagged issue it addresses.
+6. Don't re-grade the revision yourself or claim it now passes — hand it back to the
+   `editor` skill for an independent re-check, same as a first draft.
+
 ## Output
 
 Save the draft under `writing/drafts/<slug>.md` (create the directory if missing) rather
@@ -45,6 +86,6 @@ Tell the user the draft is ready for the `editor` skill.
 - Never pad with generic AI openers ("In today's fast-paced world...", "Let's dive in..."),
   hedge-everything qualifiers, or a summary-conclusion paragraph unless the persona itself
   does that.
-- Don't invent facts, numbers, or claims about the person's work — ask if a draft needs a
-  detail (a metric, a project name) that isn't in the brief.
+- Don't invent facts, numbers, or claims about the person's work — see the fabrication scan
+  above.
 - One draft, not options A/B/C, unless the user asked for alternatives.
