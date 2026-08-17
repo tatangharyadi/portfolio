@@ -40,8 +40,8 @@ for each claim (do not assert a trait without a supporting quote):
   concrete nouns vs. abstractions, swearing/slang if present, regionalisms.
 - **Punctuation tells**: em dash frequency, semicolons, ellipses, parentheticals, Oxford comma
   use, exclamation point frequency.
-- **Ornamentation**: rough fraction of sentences containing a simile, metaphor, or elevated
-  comparison vs. plain literal ones (e.g. "approximately 1 in 5 sentences are ornamented").
+- **Ornamentation**: rough percentage of sentences containing a simile, metaphor, or elevated
+  comparison vs. plain literal ones (e.g. "approximately 20% of sentences are ornamented").
 - **Rhetorical moves**: how they transition between ideas, how they land an ending, use of
   humor/self-deprecation/direct address to the reader, rhetorical questions, specific
   anecdotes vs. general claims.
