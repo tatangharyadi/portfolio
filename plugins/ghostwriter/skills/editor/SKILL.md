@@ -167,6 +167,3 @@ need another `profile` pass with more samples.
   editing it.
 - Flag, don't silently resolve, anything you're unsure whether the persona would actually
   do — call it out as a specific line in the fix list rather than guessing.
-
-Some of the false-positive guardrails and AI-tell patterns above draw on the humanizer
-project (MIT licensed).
