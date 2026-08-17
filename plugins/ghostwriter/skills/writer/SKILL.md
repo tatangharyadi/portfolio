@@ -33,21 +33,14 @@ Write to match the persona's actual habits from `writing/persona.md`, not to a c
   notes they never use semicolons, don't use semicolons).
 - Reuse their rhetorical moves (direct address, rhetorical questions, anecdote-first, etc.)
   where they fit the content, not on every paragraph.
-- Give actions a named actor — a specific person, or "you" — instead of letting an
-  abstraction do something human ("the decision emerges," "the data tells us"). Default to
-  active voice; use passive only when the actor is genuinely unknown or beside the point.
-  Skip binary-contrast setups ("Not X, it's Y") and just state the true half.
-- State a fact directly instead of announcing it — skip "turns out"/"it turns out that" as a
-  reveal pivot, and skip "What [verb phrase] was [the revelation]" framing ("What surprised
-  me was...", "The thing I realized was..."); just say the thing. Don't reach for a semicolon
-  joining two independent clauses or a mid-sentence colon before an incomplete clause ("The
-  problem: nobody tests this") unless the persona's own punctuation profile documents either
-  as a habit.
-- Name a source for a claim or cut it — don't launder it through "experts believe" or
-  "research suggests." Don't frame an observation as a revelation nobody else has noticed
-  ("nobody is talking about this"). Use one hedge, not a stacked pair that cancels itself
-  ("could potentially," "may eventually"). Skip social-endorsement closers ("worth your
-  time," "thank me later," bookmark/share prompts).
+- Avoid the AI-tell patterns the `editor` skill checks for — its **Hedging & directness**,
+  **Agency & construction**, **Overused-word clusters**, and **Formatting & mechanical
+  tells** checks in `plugins/ghostwriter/skills/editor/SKILL.md` are the canonical,
+  maintained list (named actor over abstraction, no binary-contrast setups, no "turns out"
+  reveal pivots, no vague attribution, no hedge-stacking, no social-endorsement closers, and
+  more). Read that list directly rather than working from a copy here — a partial copy
+  drifts out of sync as the canonical list grows, which is why this used to be a shorter
+  inline enumeration and no longer is.
 
 ## Before finalizing (every draft)
 

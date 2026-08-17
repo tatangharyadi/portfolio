@@ -94,72 +94,85 @@ to 100:
   an article on a different topic, and empty quantifiers ("many benefits," "a variety of,"
   "numerous," "several"). Name one concrete detail per paragraph as evidence — a paragraph
   with none fails.
-- **Hedging & directness** — weight 10. Flag formulaic delay-openers ("In today's...", "It's
-  important to note that..."), stacked qualifiers ("arguably," "in many ways"), unearned
-  summary-conclusion paragraphs, hype constructions ("doesn't just X — it revolutionizes
-  it"), and a perfectly even register with no controlled imperfection (a fragment, an aside,
-  a blunt line, direct address to the reader). Flag the canonical AI academic-transition
-  list at sentence openers — "Moreover,", "Additionally,", "Furthermore,", "Hence,",
-  "Therefore,", "Consequently,", "Nonetheless,", "Nevertheless," — unless the persona's
-  Transitions & connectors section documents one of these as a word they actually use, in
-  which case check frequency against that baseline instead of flagging on sight. This
-  8-word list is a floor of always-suspect openers, not the whole check: beyond it, flag any
-  other empty transition used more than the persona's documented Transitions & connectors
-  register supports (e.g. "On the other hand," "That being said," "In addition," if the
-  persona's samples don't use them this way). Also flag signposting ("let's dive in," "here's
-  what you need to know"), collaborative-artifact
-  leftovers ("I hope this helps," "let me know if you'd like me to expand"), and sycophantic
-  tone ("great question," "you're absolutely right") — these are chatbot-correspondence
-  habits, not prose. Also flag "turns out"/"it turns out that" used as a reveal pivot
-  ("Turns out the config had a lower timeout") — it manufactures a discovery narrative
-  where a direct statement would do; the fix is dropping the pivot phrase, not the fact
-  itself. Flag announcement sentences of the form "What [verb phrase] was [the revelation]"
-  ("What surprised me was...", "What I didn't expect was...", "The thing I realized was..."),
-  with or without a following colon — the announcement structure is the tell, not the
-  punctuation. Flag vague attribution ("experts believe," "research suggests," "studies
-  show") with no named source — either the source is named or the claim is cut, this
-  overlaps the Accuracy & integrity gate but is worth flagging here too since it's a
-  register tell independent of whether the claim is literally true. Flag novelty inflation
-  ("nobody is talking about this," "this changes everything") presented as revelation
-  instead of one interpretation among others. Flag hedge-stacked predictions where a modal
-  verb and a hedge cancel each other out ("could potentially," "may eventually," "might
-  possibly") — keep one hedge, not two. Flag social endorsement closers ("worth your time,"
-  "thank me later," generic bookmark/share prompts) — chatbot-correspondence habits, not
-  prose, same family as the signposting/sycophancy hits above. Quote one plainly-committed
-  line and flag any hits found.
+- **Hedging & directness** — weight 10. Flag any of:
+  - Formulaic delay-openers ("In today's...", "It's important to note that..."), stacked
+    qualifiers ("arguably," "in many ways"), unearned summary-conclusion paragraphs, hype
+    constructions ("doesn't just X — it revolutionizes it"), and a perfectly even register
+    with no controlled imperfection (a fragment, an aside, a blunt line, direct address to
+    the reader).
+  - The canonical AI academic-transition list at sentence openers — "Moreover,",
+    "Additionally,", "Furthermore,", "Hence,", "Therefore,", "Consequently,", "Nonetheless,",
+    "Nevertheless," — unless the persona's Transitions & connectors section documents one of
+    these as a word they actually use, in which case check frequency against that baseline
+    instead of flagging on sight. This 8-word list is a floor of always-suspect openers, not
+    the whole check: beyond it, flag any other empty transition used more than the persona's
+    documented Transitions & connectors register supports (e.g. "On the other hand," "That
+    being said," "In addition," if the persona's samples don't use them this way).
+  - Signposting ("let's dive in," "here's what you need to know"), collaborative-artifact
+    leftovers ("I hope this helps," "let me know if you'd like me to expand"), and
+    sycophantic tone ("great question," "you're absolutely right") — chatbot-correspondence
+    habits, not prose.
+  - "Turns out"/"it turns out that" used as a reveal pivot ("Turns out the config had a
+    lower timeout") — it manufactures a discovery narrative where a direct statement would
+    do; the fix is dropping the pivot phrase, not the fact itself.
+  - Announcement sentences of the form "What [verb phrase] was [the revelation]" ("What
+    surprised me was...", "What I didn't expect was...", "The thing I realized was..."),
+    with or without a following colon — the announcement structure is the tell, not the
+    punctuation.
+  - Vague attribution ("experts believe," "research suggests," "studies show") with no
+    named source — either the source is named or the claim is cut; this overlaps the
+    Accuracy & integrity gate but is worth flagging here too since it's a register tell
+    independent of whether the claim is literally true.
+  - Novelty inflation ("nobody is talking about this," "this changes everything") presented
+    as revelation instead of one interpretation among others.
+  - Hedge-stacked predictions where a modal verb and a hedge cancel each other out ("could
+    potentially," "may eventually," "might possibly") — keep one hedge, not two.
+  - Social endorsement closers ("worth your time," "thank me later," generic bookmark/share
+    prompts) — chatbot-correspondence habits, same family as the signposting/sycophancy hits
+    above.
+
+  Quote one plainly-committed line and flag any hits found.
 - **Voice match** — weight 20. Check directly against the persona's Imitation checklist (its
   5 most load-bearing traits) and AI-tell checklist (patterns this person's writing does NOT
   contain), plus sentence rhythm, transitions, vocabulary, register, and punctuation
   generally. Any phrase of 4+ consecutive words
   also appearing verbatim in `writing/samples/` is an automatic 0 regardless of everything
   else — that's copying, not style. Name 2 specific persona traits and confirm they appear.
-- **Agency & construction** — weight 10. Flag inanimate or abstract nouns performing human
-  actions ("the complaint becomes a fix," "the data tells us," "the decision emerges," "the
-  market rewards") — name the actual person responsible, or use "you," instead. Flag passive
-  voice with no named actor ("mistakes were made," "it is believed that"). Flag binary-
-  contrast templates ("Not X, it's Y," "The answer isn't X, it's Y," "It feels like X, it's
-  actually Y," "not just X but also Y") — state the true half directly instead of setting up
-  the reversal. Flag sentences opening with a Wh-word (What/When/Where/Which/Who/Why/How)
-  used as a rhetorical setup rather than a genuine question — unless the persona's Openings
-  section documents question-openers as a habitual move, in which case check frequency
-  against that baseline instead of flagging on sight. Also flag narrator-from-a-distance
-  observations floating above the scene instead of naming a person or the reader ("Nobody
-  designed this," "People tend to..."). Also flag constructed-insight patterns — sentence
-  shapes that manufacture the feel of insight rather than earning it: a formula personal-
-  essay opener naming the ranked memory before the incident ("The failure I think about
-  most often happened in 2019," "The decision I regret most is..."); a participial reframe
-  pivot presenting facts then recasting them as meaningful ("Laid out that way, it reads
-  like a strategy," "Seen this way, the arc changes"); a "more X than Y" comparative framing
-  something by contrast instead of stating it directly ("feels more like drift than
-  design") — distinct from the binary-contrast template above, which negates ("Not X, it's
-  Y") rather than compares; a mini-aphorism paragraph closer, a 4-7 word fragment that tells
-  the reader the lesson instead of trusting them to draw it ("That's the part that stuck,"
-  "That's what changed"); the landing phrase "is the actual/real work" used to deliver a
-  conclusion ("Debugging production is the actual work"); and an aphoristic or chiasmus
-  closer built as a standalone-quotable or reversed-parallel line ("The boilerplate is
-  cheaper than the confusion," "Being specific about being wrong is more useful than being
-  vague about being right"). Quote every hit in full. Score 1 if none, 0.5 for
-  one or two isolated hits, 0 for a cluster.
+- **Agency & construction** — weight 10. Flag any of:
+  - Inanimate or abstract nouns performing human actions ("the complaint becomes a fix,"
+    "the data tells us," "the decision emerges," "the market rewards") — name the actual
+    person responsible, or use "you," instead.
+  - Passive voice with no named actor ("mistakes were made," "it is believed that").
+  - Binary-contrast templates ("Not X, it's Y," "The answer isn't X, it's Y," "It feels like
+    X, it's actually Y," "not just X but also Y") — state the true half directly instead of
+    setting up the reversal.
+  - Sentences opening with a Wh-word (What/When/Where/Which/Who/Why/How) used as a
+    rhetorical setup rather than a genuine question — unless the persona's Openings section
+    documents question-openers as a habitual move, in which case check frequency against
+    that baseline instead of flagging on sight.
+  - Narrator-from-a-distance observations floating above the scene instead of naming a
+    person or the reader ("Nobody designed this," "People tend to...").
+  - Constructed-insight patterns — sentence shapes that manufacture the feel of insight
+    rather than earning it:
+    - A formula personal-essay opener naming the ranked memory before the incident ("The
+      failure I think about most often happened in 2019," "The decision I regret most
+      is...").
+    - A participial reframe pivot presenting facts then recasting them as meaningful ("Laid
+      out that way, it reads like a strategy," "Seen this way, the arc changes").
+    - A "more X than Y" comparative framing something by contrast instead of stating it
+      directly ("feels more like drift than design") — distinct from the binary-contrast
+      template above, which negates ("Not X, it's Y") rather than compares.
+    - A mini-aphorism paragraph closer, a 4-7 word fragment that tells the reader the lesson
+      instead of trusting them to draw it ("That's the part that stuck," "That's what
+      changed").
+    - The landing phrase "is the actual/real work" used to deliver a conclusion ("Debugging
+      production is the actual work").
+    - An aphoristic or chiasmus closer built as a standalone-quotable or reversed-parallel
+      line ("The boilerplate is cheaper than the confusion," "Being specific about being
+      wrong is more useful than being vague about being right").
+
+  Quote every hit in full. Score 1 if none, 0.5 for one or two isolated hits, 0 for a
+  cluster.
 - **Overused-word clusters** — weight 5. Treat as a hint, not a ban — one flagged word is
   fine if it's genuinely the most accurate one; the real tell is a *cluster*, or these
   appearing alongside the patterns above. Watch for: "delve", "tapestry",
