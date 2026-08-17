@@ -59,13 +59,16 @@ throughout, no stiff or elevated diction.
 Contraction baseline: counted directly against first-person narration in both source
 excerpts (dialogue was excluded — dialogue contracts almost universally, e.g. "You'd
 better disguise that dragon, kid," "We've been over it a thousand times," and isn't
-representative of essay-style narration). Narration itself contracts ~60-70% of the time:
-"I didn't," "wasn't," "you're getting ahead of myself" contract freely, but modal-perfect
-constructions stay uncontracted even in the same paragraph — "I probably **would have**
+representative of essay-style narration). Narration contracts freely in the general case —
+"I didn't," "wasn't," "but I'm getting ahead of myself" — but two specific constructions
+stay uncontracted even in the same paragraph: modal-perfects ("I probably **would have**
 stayed in bed," "Something **would have** to be done about them" — never "would've" in
-narration, only in dialogue. Rough estimate: contracts ~65% of the time in narration,
-with "would have"/"should have" as the specific holdout that stays expanded. This is
-lower than the earlier 85-90% guess in this file, which was implicitly measuring dialogue.
+narration, only in dialogue) and occasional emphatic negations ("was not," "had not").
+Sample size is small (roughly a dozen contraction opportunities across both excerpts), so
+don't read this as a precise percentage — the reliable finding is the rule, not a rate:
+contracts by default in narration, holds out only for modal-perfects and emphatic
+negation. This supersedes the earlier 85-90% guess in this file, which was implicitly
+measuring dialogue.
 Parentheticals for a dry aside, used sparingly — confirmed real: "(hard won and painfully
 endured)" (*Myth Conceptions*, Ch. 1). Exclamation points mostly dropped in narration —
 Asprin's dialogue-comedy use of them doesn't fit "mostly serious." Em dashes rare in
