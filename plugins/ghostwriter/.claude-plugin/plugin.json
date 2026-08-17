@@ -1,0 +1,10 @@
+{
+  "name": "ghostwriter",
+  "displayName": "Ghostwriter",
+  "version": "1.0.0",
+  "description": "Extracts a voice persona from writing samples, drafts content in that voice, and edits drafts to match it while avoiding AI-sounding prose",
+  "author": {
+    "name": "Tatang Haryadi"
+  },
+  "keywords": ["writing", "editing", "voice", "persona"]
+}

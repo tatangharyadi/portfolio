@@ -1,0 +1,13 @@
+{
+  "extraKnownMarketplaces": {
+    "portfolio-ghostwriter": {
+      "source": {
+        "source": "directory",
+        "path": "."
+      }
+    }
+  },
+  "enabledPlugins": {
+    "ghostwriter@portfolio-ghostwriter": true
+  }
+}
