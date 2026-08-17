@@ -10,10 +10,12 @@ it so it matches `writing/persona.md` and doesn't read as AI-generated.
 
 ## Before editing
 
-Read `writing/persona.md` in full, especially the "AI-tell checklist" section — that section
-lists the specific AI-sounding patterns this person's real writing does NOT contain, and is
-the primary thing to check the draft against. If `writing/persona.md` is missing, stop and
-say the `profile` skill needs to run first.
+Read `writing/persona.md` in full. Check the draft against the "Imitation checklist" section
+first — it's the 5 most load-bearing traits, so a draft that fails one of those is worth
+flagging before a full section-by-section pass. Then use the "AI-tell checklist" section,
+which lists the specific AI-sounding patterns this person's real writing does NOT contain,
+as the primary thing to check the draft against. If `writing/persona.md` is missing, stop
+and say the `profile` skill needs to run first.
 
 ## Pass 1 — persona conformance
 
