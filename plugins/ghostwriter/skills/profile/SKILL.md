@@ -16,6 +16,11 @@ or a URL/Medium link they've already fetched into a file. Prefer at least 3 samp
 600+ words total; if only one short sample is available, say so in the output and mark the
 profile as low-confidence.
 
+Confirm all samples share one author before analyzing. A persona is a description of how
+one specific person writes — mixing authors produces a blend that's true of neither. If
+samples turn out to be multi-author, flag it to the user instead of merging silently, and
+prefer building from the single largest-author subset over shipping a blended profile.
+
 Save any raw samples handed to you under `writing/samples/` (create the directory if
 missing) so future runs can build on them instead of starting over.
 
@@ -40,6 +45,11 @@ for each claim (do not assert a trait without a supporting quote):
   concrete nouns vs. abstractions, swearing/slang if present, regionalisms.
 - **Punctuation tells**: em dash frequency, semicolons, ellipses, parentheticals, Oxford comma
   use, exclamation point frequency.
+- **Contraction density**: count contracted forms ("don't", "it's", "they're") against places
+  where the expanded form ("do not", "it is", "they are") would've fit grammatically, and give
+  a rough ratio (e.g. "contracts ~90% of the time it could"). AI-generated text skews toward
+  expanded forms even when the persona doesn't, so this is worth measuring even if it feels
+  obvious.
 - **Ornamentation**: rough percentage of sentences containing a simile, metaphor, or elevated
   comparison vs. plain literal ones (e.g. "approximately 20% of sentences are ornamented").
 - **Rhetorical moves**: how they transition between ideas, how they land an ending, use of
@@ -79,6 +89,7 @@ Source samples: writing/samples/<files>
 ...
 
 ## Punctuation
+Contraction baseline: <the measured ratio, e.g. "contracts ~90% of the time it could">
 ...
 
 ## Ornamentation
