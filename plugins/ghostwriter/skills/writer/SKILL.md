@@ -33,10 +33,14 @@ Write to match the persona's actual habits from `writing/persona.md`, not to a c
   notes they never use semicolons, don't use semicolons).
 - Reuse their rhetorical moves (direct address, rhetorical questions, anecdote-first, etc.)
   where they fit the content, not on every paragraph.
-- Give actions a named actor — a specific person, or "you" — instead of letting an
-  abstraction do something human ("the decision emerges," "the data tells us"). Default to
-  active voice; use passive only when the actor is genuinely unknown or beside the point.
-  Skip binary-contrast setups ("Not X, it's Y") and just state the true half.
+- Avoid the AI-tell patterns the `editor` skill checks for — its **Hedging & directness**,
+  **Agency & construction**, **Overused-word clusters**, and **Formatting & mechanical
+  tells** checks in `plugins/ghostwriter/skills/editor/SKILL.md` are the canonical,
+  maintained list (named actor over abstraction, no binary-contrast setups, no "turns out"
+  reveal pivots, no vague attribution, no hedge-stacking, no social-endorsement closers, and
+  more). Read that list directly rather than working from a copy here — a partial copy
+  drifts out of sync as the canonical list grows, which is why this used to be a shorter
+  inline enumeration and no longer is.
 
 ## Before finalizing (every draft)
 
@@ -74,7 +78,10 @@ to a surgical fix instead of rewriting:
 2. Work through the flagged issues in the order given. For each one: quote the problem
    sentence, rewrite only that sentence or clause to fix the specific issue named, and leave
    the sentences around it alone unless the fix forces a small adjustment to the one right
-   before or after for the paragraph to still read.
+   before or after for the paragraph to still read. Confirm the rewrite preserves the
+   original claim exactly — same scope, same certainty/hedge level, same attribution, same
+   named condition or number — a style fix that quietly softens a claim or drops who said it
+   is a new problem, not a fix.
 3. Re-run the fabrication scan above against the whole revised draft. If the editor flagged a
    triad, fix only the quoted line(s) as instructed — don't re-scan the rest of the draft for
    triads yourself; that's `editor`'s job on the re-check.
