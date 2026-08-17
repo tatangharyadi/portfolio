@@ -144,7 +144,21 @@ to 100:
   section documents question-openers as a habitual move, in which case check frequency
   against that baseline instead of flagging on sight. Also flag narrator-from-a-distance
   observations floating above the scene instead of naming a person or the reader ("Nobody
-  designed this," "People tend to..."). Quote every hit in full. Score 1 if none, 0.5 for
+  designed this," "People tend to..."). Also flag constructed-insight patterns — sentence
+  shapes that manufacture the feel of insight rather than earning it: a formula personal-
+  essay opener naming the ranked memory before the incident ("The failure I think about
+  most often happened in 2019," "The decision I regret most is..."); a participial reframe
+  pivot presenting facts then recasting them as meaningful ("Laid out that way, it reads
+  like a strategy," "Seen this way, the arc changes"); a "more X than Y" comparative framing
+  something by contrast instead of stating it directly ("feels more like drift than
+  design") — distinct from the binary-contrast template above, which negates ("Not X, it's
+  Y") rather than compares; a mini-aphorism paragraph closer, a 4-7 word fragment that tells
+  the reader the lesson instead of trusting them to draw it ("That's the part that stuck,"
+  "That's what changed"); the landing phrase "is the actual/real work" used to deliver a
+  conclusion ("Debugging production is the actual work"); and an aphoristic or chiasmus
+  closer built as a standalone-quotable or reversed-parallel line ("The boilerplate is
+  cheaper than the confusion," "Being specific about being wrong is more useful than being
+  vague about being right"). Quote every hit in full. Score 1 if none, 0.5 for
   one or two isolated hits, 0 for a cluster.
 - **Overused-word clusters** — weight 5. Treat as a hint, not a ban — one flagged word is
   fine if it's genuinely the most accurate one; the real tell is a *cluster*, or these
