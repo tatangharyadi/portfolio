@@ -12,9 +12,10 @@ itself; that's the `writer` skill's revision mode.
 
 ## Before auditing
 
-Read `writing/persona.md` in full — the Imitation checklist, AI-tell checklist, and the
-`Ornament baseline: ...` line under `## Ornamentation` feed directly into the scored checks
-below. If it's missing, stop and say the `profile` skill needs to run first.
+Read `writing/persona.md` in full — the Imitation checklist, AI-tell checklist, the
+`Ornament baseline: ...` line under `## Ornamentation`, and the `Contraction baseline: ...`
+line under `## Punctuation` feed directly into the scored checks below. If it's missing,
+stop and say the `profile` skill needs to run first.
 
 ## Mindset
 
@@ -94,21 +95,28 @@ to 100:
   "numerous," "several"). Name one concrete detail per paragraph as evidence — a paragraph
   with none fails.
 - **Hedging & directness** — weight 10. Flag formulaic delay-openers ("In today's...", "It's
-  important to note that..."), empty transitions used more than the persona's register
-  supports ("Furthermore," "That being said"), stacked qualifiers ("arguably," "in many
-  ways"), unearned summary-conclusion paragraphs, hype constructions ("doesn't just X — it
-  revolutionizes it"), and a perfectly even register with no controlled imperfection (a
-  fragment, an aside, a blunt line, direct address to the reader). Also flag signposting
-  ("let's dive in," "here's what you need to know"), collaborative-artifact leftovers ("I
-  hope this helps," "let me know if you'd like me to expand"), and sycophantic tone ("great
-  question," "you're absolutely right") — these are chatbot-correspondence habits, not prose.
-  Quote one plainly-committed line and flag any hits found.
+  important to note that..."), stacked qualifiers ("arguably," "in many ways"), unearned
+  summary-conclusion paragraphs, hype constructions ("doesn't just X — it revolutionizes
+  it"), and a perfectly even register with no controlled imperfection (a fragment, an aside,
+  a blunt line, direct address to the reader). Flag the canonical AI academic-transition
+  list at sentence openers — "Moreover,", "Additionally,", "Furthermore,", "Hence,",
+  "Therefore,", "Consequently,", "Nonetheless,", "Nevertheless," — unless the persona's
+  Transitions & connectors section documents one of these as a word they actually use, in
+  which case check frequency against that baseline instead of flagging on sight. This
+  8-word list is a floor of always-suspect openers, not the whole check: beyond it, flag any
+  other empty transition used more than the persona's documented Transitions & connectors
+  register supports (e.g. "On the other hand," "That being said," "In addition," if the
+  persona's samples don't use them this way). Also flag signposting ("let's dive in," "here's
+  what you need to know"), collaborative-artifact
+  leftovers ("I hope this helps," "let me know if you'd like me to expand"), and sycophantic
+  tone ("great question," "you're absolutely right") — these are chatbot-correspondence
+  habits, not prose. Quote one plainly-committed line and flag any hits found.
 - **Voice match** — weight 20. Check directly against the persona's Imitation checklist (its
   5 most load-bearing traits) and AI-tell checklist (patterns this person's writing does NOT
   contain), plus sentence rhythm, transitions, vocabulary, register, and punctuation
-  generally. Any phrase of 4+ consecutive words also appearing verbatim in
-  `writing/samples/` is an automatic 0 regardless of everything else — that's copying, not
-  style. Name 2 specific persona traits and confirm they appear.
+  generally. Any phrase of 4+ consecutive words
+  also appearing verbatim in `writing/samples/` is an automatic 0 regardless of everything
+  else — that's copying, not style. Name 2 specific persona traits and confirm they appear.
 - **Agency & construction** — weight 10. Flag inanimate or abstract nouns performing human
   actions ("the complaint becomes a fix," "the data tells us," "the decision emerges," "the
   market rewards") — name the actual person responsible, or use "you," instead. Flag passive
@@ -135,7 +143,12 @@ to 100:
   sparingly; inline-header bullet lists ("**Label:** sentence" repeated down a list); Title
   Case In Headings instead of sentence case; emojis decorating headings or bullets; curly
   quotation marks (" ") stacked with other tells rather than appearing alone (most editors
-  auto-curl, so this one only counts in combination). List every hit with a quote. Score the
+  auto-curl, so this one only counts in combination). Count the draft's contraction ratio
+  (contracted forms like "don't"/"it's" vs. their expanded equivalents) and compare it
+  against the `Contraction baseline` line in `writing/persona.md` (if that line is missing
+  because the persona predates this check, fall back to judging contraction use against the
+  samples cited elsewhere in the file) — a draft that expands contractions the persona
+  normally uses reads as over-formalized AI text. List every hit with a quote. Score the
   hits, not the absence: 1 if "0 hits found", 0.5 for one or two isolated hits, 0 for a
   cluster of hits or any single hit repeated throughout the draft.
 - **Ornament density** — weight 20. Enumerate every sentence in the draft, numbered, tagged
