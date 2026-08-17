@@ -7,8 +7,7 @@ Agent behavioral guidelines for the `ghostwriter` plugin (`plugins/ghostwriter/`
 
 No install step beyond the plugin itself. Add the repo-local marketplace once
 (`.claude-plugin/marketplace.json` already declares it) and enable `ghostwriter`. The three
-skills — `profile`, `writer`, `editor` — read and write only under `writing/`; nothing here
-touches the portfolio site content (`index.html`, `style.css`).
+skills — `profile`, `writer`, `editor` — read and write only under `writing/`.
 
 ## Scope
 
@@ -23,7 +22,6 @@ prose, and to catch it when it doesn't. It covers:
 **Not in scope:**
 - House styles blended from multiple authors — `profile` describes one person's voice; see
   **Single-author rule** below.
-- Editing the portfolio site itself (`index.html`, `style.css`) — unrelated to this plugin.
 - Publishing or posting anywhere — these skills only produce local files under `writing/`.
 
 ## Skill Workflow
