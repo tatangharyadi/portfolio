@@ -51,13 +51,14 @@ these while composing:
   one.
 
 Only after both scans are clean, do a general pass for ornament density (against the
-persona's ornament baseline), hedging, and word clusters.
+`Ornament baseline` line in `writing/persona.md`), hedging, and word clusters.
 
 ## Revision mode
 
-If the user pastes back a draft you wrote plus feedback from the `editor` skill (a
-per-check breakdown, specific flagged lines, or a NEEDS REVISION / MINOR REVISION verdict),
-switch to a surgical fix instead of rewriting:
+If you're handed a draft you wrote plus feedback from the `editor` skill (a per-check
+breakdown, specific flagged lines, or a NEEDS REVISION / MINOR REVISION verdict) — whether
+the editor ran earlier in this same session or the user pasted the feedback back in — switch
+to a surgical fix instead of rewriting:
 
 1. Don't start over. Leave everything the editor didn't flag untouched — rewriting unflagged
    sentences risks breaking parts that already worked.

@@ -10,11 +10,11 @@ against `writing/persona.md`, as a skeptical outside reviewer with no stake in w
 passes. This skill grades and hands back specific fixes — it does not rewrite the draft
 itself; that's the `writer` skill's revision mode.
 
-## Before editing
+## Before auditing
 
-Read `writing/persona.md` in full — the Imitation checklist, AI-tell checklist, and
-Ornament baseline feed directly into the scored checks below. If it's missing, stop and say
-the `profile` skill needs to run first.
+Read `writing/persona.md` in full — the Imitation checklist, AI-tell checklist, and the
+`Ornament baseline: ...` line under `## Ornamentation` feed directly into the scored checks
+below. If it's missing, stop and say the `profile` skill needs to run first.
 
 ## Mindset
 
@@ -79,11 +79,10 @@ sum to 100 with Voice match, 80 without (see Scoring):
   revolutionizes it"), and a perfectly even register with no controlled imperfection (a
   fragment, an aside, a blunt line, direct address to the reader). Quote one
   plainly-committed line and flag any hedges found.
-- **Voice match** — weight 20, omit entirely (and rescale, see Scoring) if
-  `writing/persona.md` doesn't exist. Check directly against the persona's Imitation
-  checklist (its 5 most load-bearing traits) and AI-tell checklist (patterns this person's
-  writing does NOT contain), plus sentence rhythm, transitions, vocabulary, register, and
-  punctuation generally. Any phrase of 4+ consecutive words also appearing verbatim in
+- **Voice match** — weight 20. Check directly against the persona's Imitation checklist (its
+  5 most load-bearing traits) and AI-tell checklist (patterns this person's writing does NOT
+  contain), plus sentence rhythm, transitions, vocabulary, register, and punctuation
+  generally. Any phrase of 4+ consecutive words also appearing verbatim in
   `writing/samples/` is an automatic 0 regardless of everything else — that's copying, not
   style. Name 2 specific persona traits and confirm they appear.
 - **Overused-word clusters** — weight 10. Treat as a hint, not a ban — one flagged word is
@@ -95,15 +94,16 @@ sum to 100 with Voice match, 80 without (see Scoring):
 - **Ornament density** — weight 20. Enumerate every sentence in the draft, numbered, tagged
   PLAIN or ORNAMENTED (contains a simile, metaphor, or elevated comparison) — a summary
   ratio alone is not acceptable evidence, show the full numbered list. Compare the ratio to
-  the persona's "Ornament baseline" (default 1-in-3 if the persona has none or doesn't
-  exist). Score 1 within ±15 percentage points of baseline, 0.5 if 15-30 points over, 0 if
+  the persona's `Ornament baseline` line (default 1-in-3 only if that line is missing from
+  `writing/persona.md`). Being under baseline is never penalized — score 1. Over baseline:
+  score 1 within 15 percentage points over, 0.5 more than 15 and up to 30 points over, 0
   more than 30 points over.
 
 ### Scoring
 
-Sum each check's `weight × score`, divide by 100 (or 80 if Voice match was omitted), and
-multiply by 100 for a 0-100 score. Show the full per-check breakdown (score × weight =
-result) before stating the total — never state a final score without it.
+Sum each check's `weight × score`, divide by 100, and multiply by 100 for a 0-100 score.
+Show the full per-check breakdown (score × weight = result) before stating the total — never
+state a final score without it.
 
 - **90-100 READY** — use as final, at most trivial polish needed.
 - **75-89 MINOR REVISION** — usable, but fix the specific flagged lines before finalizing.

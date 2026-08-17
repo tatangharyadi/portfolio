@@ -82,6 +82,7 @@ Source samples: writing/samples/<files>
 ...
 
 ## Ornamentation
+Ornament baseline: <the measured fraction, e.g. "~20% of sentences">
 ...
 
 ## Rhetorical moves
