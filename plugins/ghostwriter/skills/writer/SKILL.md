@@ -80,7 +80,10 @@ to a surgical fix instead of rewriting:
 2. Work through the flagged issues in the order given. For each one: quote the problem
    sentence, rewrite only that sentence or clause to fix the specific issue named, and leave
    the sentences around it alone unless the fix forces a small adjustment to the one right
-   before or after for the paragraph to still read.
+   before or after for the paragraph to still read. Confirm the rewrite preserves the
+   original claim exactly — same scope, same certainty/hedge level, same attribution, same
+   named condition or number — a style fix that quietly softens a claim or drops who said it
+   is a new problem, not a fix.
 3. Re-run the fabrication scan above against the whole revised draft. If the editor flagged a
    triad, fix only the quoted line(s) as instructed — don't re-scan the rest of the draft for
    triads yourself; that's `editor`'s job on the re-check.
