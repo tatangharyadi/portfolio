@@ -52,6 +52,41 @@ pass that generated the prose is unreliable (it caught 1 of 3 real hits in pract
 with triads `editor` should be catching, that's an `editor` bug, not a reason to duplicate the
 check upstream.
 
+## Fabrication Discipline
+
+One rule, enforced three separate ways — state it once here instead of re-deriving it from
+each skill:
+
+- **`profile`** — every trait it claims must trace to a quoted snippet from a real sample; no
+  invented traits.
+- **`writer`** — tags every specific factual claim (name, number, date, stat, attributed
+  quote) and confirms it traces to the brief, to `writing/persona.md`, or is clearly fictional
+  detail inside an intentionally fictional piece. Anything else becomes `[PLACEHOLDER]`, never
+  a filled-in guess.
+- **`editor`** — gates on this first, before any scored check: any unmarked invented fact,
+  statistic, name, or quote presented as factual is an automatic NEEDS REVISION.
+
+Never invent a fact, number, name, or quote to make a draft or persona read more smoothly. A
+flatter true sentence, or a visible `[PLACEHOLDER]`, beats a smooth invented one.
+
+## AI-Tell Patterns
+
+Avoiding AI-sounding prose is the reason this plugin exists (see `plugin.json`'s description),
+not just one check among many. The canonical pattern list lives in
+`plugins/ghostwriter/skills/editor/SKILL.md` under **Hedging & directness**,
+**Overused-word clusters**, and **Formatting & mechanical tells** — that's the authoritative,
+maintained list; don't hand-copy it here where it'll drift out of sync. As a quick orientation
+for what it covers: formulaic delay-openers ("In today's...", "It's important to note
+that..."), the canonical academic-transition list ("Moreover," "Furthermore," "Additionally,"
+etc.), signposting ("let's dive in") and collaborative-artifact leftovers ("I hope this
+helps"), overused words ("delve," "tapestry," "leverage," "robust," "seamless"), and mechanical
+formatting tics (inline-header bullet lists, Title Case Headings, boldface-as-emphasis-tic).
+
+`profile`'s persona-specific **AI-tell checklist** section can override a hit on this general
+list — e.g. a persona that documents heavy em-dash use isn't penalized for em dashes just
+because the general list is wary of them. Persona-documented exceptions always win over the
+generic pattern.
+
 ## Single-author rule
 
 `profile` builds a persona around one person's writing, not a blended "house style." Before
