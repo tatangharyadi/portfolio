@@ -34,21 +34,41 @@ next to the persona trait it violates:
 ## Pass 2 — AI-tell sweep
 
 Independent of the persona, scan for generic markers that make text read as AI-written
-regardless of whose voice it's imitating:
+regardless of whose voice it's imitating. Each pattern below is something to recognize and
+remove, never to imitate — treat any resemblance in the draft as a defect to fix, not a
+style to preserve:
 
-- Formulaic openers ("In today's...", "In the ever-evolving...", "Let's dive in").
+- Formulaic openers ("In today's...", "In the ever-evolving...", "Let's dive in"). Fix:
+  delete the opener and start on the actual point.
 - Empty transitions ("Furthermore", "Moreover", "That being said") used more than a real
-  human would in this register.
-- Symmetric list-of-three padding ("not only X, but also Y, and ultimately Z") where the
-  content doesn't need it.
+  human would in this register. Fix: cut the transition word; let sentences sit next to
+  each other or use a connector the persona actually uses.
+- Symmetric list-of-three padding ("not only X, but also Y, and ultimately Z", or two
+  three-item lists back to back) where the content doesn't need it. Fix: break the list —
+  make one point, expand it with a real example, move on.
 - Over-qualification / hedging on every claim ("it's important to note that", "arguably",
-  "in many ways") stacked sentence after sentence.
+  "in many ways") stacked sentence after sentence. Fix: delete the hedge, say the thing
+  directly.
 - Tidy summary-conclusion paragraphs that restate what was just said, when nothing earlier
   called for one.
 - Uniform sentence length and rhythm — real writing (and this persona specifically) has
-  variance; a wall of same-length sentences is a tell on its own.
+  variance; a wall of same-length sentences, or a wall of same-shaped paragraphs (every
+  one opening "Let's talk about X" or "X is essential because..."), is a tell on its own.
+  Fix: collapse some sentences together, cut others to a fragment, vary paragraph openers.
 - Em dash overuse beyond what the persona's punctuation profile documents.
-- Perfectly balanced/parallel phrasing that no one would naturally speak.
+- Perfectly balanced/parallel phrasing that no one would naturally speak, including hype
+  constructions ("doesn't just X — it revolutionizes it", "not only enhances but also
+  empowers", "unlock your full potential", "elevate to new heights"). Fix: state one plain
+  claim about what the thing actually does, with a concrete result.
+- Generic claims with no specifics ("many benefits", "many people have found it useful",
+  "a variety of situations"). Fix: replace every vague claim with one real number, name,
+  example, or scenario.
+- Overused AI cliché vocabulary: "delve", "tapestry", "landscape" (as in "ever-evolving
+  landscape"), "navigate this journey", "embark on", "crucial", "robust", "seamless".
+  Fix: strip the cliché, state the point in plain words a real person would say out loud.
+- Motivational-poster over-smoothness — no opinion, no friction, interchangeable with any
+  other AI paragraph on the topic. Fix: add a real opinion, a specific detail, an aside, or
+  a blunt line that only this persona would say.
 
 ## Output
 
