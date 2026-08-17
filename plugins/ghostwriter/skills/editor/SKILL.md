@@ -163,8 +163,9 @@ This skill grades; it does not rewrite. Produce:
 
 1. A per-check PASS/FAIL/PARTIAL table with the required evidence for each (the two hard
    gates first, then the eight scored checks with weight and weighted result).
-2. A prioritized list of every specific line that needs to change and why — triads and
-   ornament density first, since those are the most common and most heavily weighted.
+2. A prioritized list of every specific line that needs to change and why — triads first,
+   since they're the most common failure mode; ornament density, specificity, and voice
+   match are tied for the heaviest weight among the rest.
 3. A final verdict: READY, MINOR REVISION, or NEEDS REVISION, with the score shown per
    Scoring above. If either hard gate failed, state that explicitly and stop there — skip
    the numeric score entirely, since the gates override scoring.
