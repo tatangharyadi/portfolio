@@ -85,6 +85,6 @@ Tell the user the draft is ready for the `editor` skill.
 - Never pad with generic AI openers ("In today's fast-paced world...", "Let's dive in..."),
   hedge-everything qualifiers, or a summary-conclusion paragraph unless the persona itself
   does that.
-- Don't invent facts, numbers, or claims about the person's work — ask if a draft needs a
-  detail (a metric, a project name) that isn't in the brief.
+- Don't invent facts, numbers, or claims about the person's work — see the fabrication scan
+  above.
 - One draft, not options A/B/C, unless the user asked for alternatives.
