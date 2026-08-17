@@ -16,6 +16,11 @@ or a URL/Medium link they've already fetched into a file. Prefer at least 3 samp
 600+ words total; if only one short sample is available, say so in the output and mark the
 profile as low-confidence.
 
+Confirm all samples share one author before analyzing. A persona is a description of how
+one specific person writes — mixing authors produces a blend that's true of neither. If
+samples turn out to be multi-author, flag it to the user instead of merging silently, and
+prefer building from the single largest-author subset over shipping a blended profile.
+
 Save any raw samples handed to you under `writing/samples/` (create the directory if
 missing) so future runs can build on them instead of starting over.
 

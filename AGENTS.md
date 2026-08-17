@@ -47,10 +47,11 @@ Run in this order; each skill hands off a specific file to the next:
 **Triad-scanning boundary:** `editor`'s hard gate is the sole authority on rule-of-three
 sentence structures — zero tolerance, checked exhaustively. `writer` used to duplicate this
 check in its own before-finalizing pass; it was dropped because a self-scan run by the same
-pass that generated the prose is unreliable (it caught 1 of 3 real hits in practice, while
-`editor` caught all of them). Don't re-add a triad scan to `writer` — if drafts are shipping
-with triads `editor` should be catching, that's an `editor` bug, not a reason to duplicate the
-check upstream.
+pass that generated the prose caught only 1 of 3 real hits in one drafting session, while
+`editor` caught all of them, and a surgical revision-mode fix to the flagged lines (no
+self-scan) didn't introduce a new one on that same draft. That's still a small sample —
+if a future draft ships with a triad `editor` should have caught, that's worth re-examining
+before assuming the split is wrong.
 
 ## Fabrication Discipline
 
@@ -75,12 +76,7 @@ Avoiding AI-sounding prose is the reason this plugin exists (see `plugin.json`'s
 not just one check among many. The canonical pattern list lives in
 `plugins/ghostwriter/skills/editor/SKILL.md` under **Hedging & directness**,
 **Overused-word clusters**, and **Formatting & mechanical tells** — that's the authoritative,
-maintained list; don't hand-copy it here where it'll drift out of sync. As a quick orientation
-for what it covers: formulaic delay-openers ("In today's...", "It's important to note
-that..."), the canonical academic-transition list ("Moreover," "Furthermore," "Additionally,"
-etc.), signposting ("let's dive in") and collaborative-artifact leftovers ("I hope this
-helps"), overused words ("delve," "tapestry," "leverage," "robust," "seamless"), and mechanical
-formatting tics (inline-header bullet lists, Title Case Headings, boldface-as-emphasis-tic).
+maintained list; read it there rather than trusting a copy here that could drift out of sync.
 
 `profile`'s persona-specific **AI-tell checklist** section can override a hit on this general
 list — e.g. a persona that documents heavy em-dash use isn't penalized for em dashes just
