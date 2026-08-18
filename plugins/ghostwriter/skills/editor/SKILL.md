@@ -17,6 +17,15 @@ Read `writing/persona.md` in full — the Imitation checklist, AI-tell checklist
 line under `## Punctuation` feed directly into the scored checks below. If it's missing,
 stop and say the `profile` skill needs to run first.
 
+Several checks below key off a specific persona.md field (a documented rate, a named quirk,
+a baseline line). Where the check states its own explicit fallback default for that field
+(e.g. Ornament density's "default 1-in-3 only if that line is missing"), use it. Where a
+check has no stated fallback and the field is genuinely absent from persona.md, don't
+silently substitute a number or pass the sub-check as if it were satisfied — name the
+missing field in the fix list output and note that a `profile` refresh may need to capture
+it. persona.md's own template requires all of these fields, so this should be rare; treat it
+as a signal, not routine plumbing.
+
 ## Mindset
 
 Run this audit as a skeptical editor reviewing someone else's submission, not as the author
@@ -90,7 +99,11 @@ to 100:
   longest-sentence word count rather than a per-paragraph rule), check against that documented
   rate, not the per-paragraph default — the persona's own measured pattern always overrides
   this generic floor. Within a paragraph, no more than 2 sentences share an opener (same
-  first word or same subject-verb-object shape), and consecutive paragraphs shouldn't open
+  first word or same subject-verb-object shape) — unless the persona's Openings or Quirks
+  section documents repeated-opener escalation as a habitual move (e.g. "repeats the same
+  subject-verb opener across two consecutive sentences for deadpan escalation"), in which
+  case exactly that pattern, at that documented length, is not a hit; only a run longer than
+  what persona documents counts against this sub-check. Consecutive paragraphs shouldn't open
   with the same template or hold the identical internal shape (claim → because → restate)
   throughout. Quote the draft's shortest and longest sentence, and name any repeated opener.
   Also check paragraph length against the persona's own documented range (the shortest/
