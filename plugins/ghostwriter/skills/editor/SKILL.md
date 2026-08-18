@@ -237,7 +237,11 @@ to 100:
   "landscape"/"navigate" (figurative), "embark", "unlock", "elevate", "empower", "seamless",
   "leverage" (verb), "robust", "testament", "utilize", "harness" (figurative), "streamline",
   "underscore" (verb), "pivotal", "innovative", "cutting-edge", "realm", "synergy",
-  "underpinnings". List any hits and justify or remove each. Score
+  "underpinnings". Check any hit against the persona's Vocabulary and Ornamentation sections
+  first — a word the persona's own samples actually use, or one that fits within its
+  documented Ornament baseline rate, is not a hit; this list is a generic floor, not an
+  override of what persona.md already documents as this person's real vocabulary. List any
+  remaining hits and justify or remove each. Score
   1 if no unjustified hits, 0.5 for one or two isolated unjustified hits, 0 for a cluster.
 - **Formatting & mechanical tells** — weight 5. Independent of wording, these are
   near-mechanical to check: em dash or en dash use beyond what the persona's punctuation
