@@ -89,6 +89,11 @@ to 100:
   first word or same subject-verb-object shape), and consecutive paragraphs shouldn't open
   with the same template or hold the identical internal shape (claim → because → restate)
   throughout. Quote the draft's shortest and longest sentence, and name any repeated opener.
+  Also check paragraph length against the persona's own documented range (the shortest/
+  longest paragraph-length note under its Structure habits section, if present) — a draft
+  whose paragraphs run uniformly longer or shorter than that range reads as off-voice even
+  when individual sentences pass; count the draft's shortest and longest paragraph (in
+  sentences) as evidence.
 - **Specificity** — weight 20. Every paragraph needs one concrete, non-interchangeable
   detail (a number, name, or scenario); flag generic filler that could appear unchanged in
   an article on a different topic, and empty quantifiers ("many benefits," "a variety of,"
@@ -135,9 +140,14 @@ to 100:
 - **Voice match** — weight 20. Check directly against the persona's Imitation checklist (its
   5 most load-bearing traits) and AI-tell checklist (patterns this person's writing does NOT
   contain), plus sentence rhythm, transitions, vocabulary, register, and punctuation
-  generally. Any phrase of 4+ consecutive words
-  also appearing verbatim in `writing/samples/` is an automatic 0 regardless of everything
-  else — that's copying, not style. Name 2 specific persona traits and confirm they appear.
+  generally. Also check the draft's lexical-repetition tolerance against the persona's
+  documented baseline (its Vocabulary section, if it notes one): if the persona repeats a
+  word plainly on recurrence and the draft instead reaches for a synonym each time
+  ("elegant variation"), or vice versa, that's a specific, checkable voice mismatch — quote
+  an instance where the draft's choice diverges from the documented baseline. Any phrase of
+  4+ consecutive words also appearing verbatim in `writing/samples/` is an automatic 0
+  regardless of everything else — that's copying, not style. Name 2 specific persona traits
+  and confirm they appear.
 - **Agency & construction** — weight 10. Flag any of:
   - Inanimate or abstract nouns performing human actions ("the complaint becomes a fix,"
     "the data tells us," "the decision emerges," "the market rewards") — name the actual
