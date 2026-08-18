@@ -44,8 +44,9 @@ for each claim (do not assert a trait without a supporting quote):
   paragraphs if the sample repeats a shape, since a rigid template is itself an AI tell.
 - **Transitions & connectors**: the specific transition words/phrases this writer actually
   uses, and ones they clearly avoid (e.g. never "furthermore" or "moreover").
-- **Vocabulary fingerprints**: recurring words/phrases, contractions vs. formal, jargon level,
-  concrete nouns vs. abstractions, swearing/slang if present, regionalisms.
+- **Vocabulary fingerprints**: recurring content words/phrases (not conjunctions, pronouns, or
+  prepositions — those belong under Function-word tendencies below), contractions vs. formal,
+  jargon level, concrete nouns vs. abstractions, swearing/slang if present, regionalisms.
 - **Function-word tendencies**: specific conjunctions, pronouns, or prepositions that recur
   noticeably or are conspicuously avoided (e.g. "but" over "however," dropped relative
   pronouns — "the thing I built" not "the thing that I built") — quote an instance for each,
