@@ -43,8 +43,8 @@ for each claim (do not assert a trait without a supporting quote):
   (e.g. claim-then-evidence every time) or vary it — quote at least two differently-shaped
   paragraphs if the sample repeats a shape, since a rigid template is itself an AI tell.
   Count typical paragraph length in sentences (shortest and longest, not just "varies") —
-  AI output defaults to uniform paragraph length even when it varies sentence length within
-  them, so this is a distinct tell from sentence rhythm above.
+  this is a distinct, separately countable structural tell from sentence rhythm above, so
+  don't skip it just because sentence rhythm is already documented.
 - **Transitions & connectors**: the specific transition words/phrases this writer actually
   uses, and ones they clearly avoid (e.g. never "furthermore" or "moreover").
 - **Vocabulary fingerprints**: recurring content words/phrases (not conjunctions, pronouns, or
