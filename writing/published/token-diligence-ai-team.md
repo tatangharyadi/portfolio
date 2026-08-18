@@ -1,8 +1,8 @@
 # Managing an AI-applied engineering team is mostly token discipline
 
 A team of AI-applied engineers doesn't fail because the model is bad. It fails because
-nobody mapped which task should cost how many tokens, and by the time anyone notices, the
-bill already explains it.
+nobody mapped which task should cost how many tokens, and by the time anyone glances at
+the invoice, they're paying migration-sized bills for lookup-sized fixes.
 
 I've watched a team burn a week's budget on tasks that should have taken an afternoon.
 Nobody set a ceiling. Nobody asked what a routine refactor should cost versus what a
@@ -11,9 +11,10 @@ glanced at the invoice and asked why a linting pass cost as much as a rewrite.
 
 The first job is mapping tokens to tasks before the work starts, not after the bill
 arrives. A quick lookup fix gets a small budget and a low-effort model. A cross-repo
-migration gets a bigger one, on purpose, because the task actually needs it. Skip that
-mapping and every task defaults to whatever the harness happens to reach for, which is
-usually more than it needs.
+migration gets a bigger one, on purpose, because the task actually needs it, and cutting
+the budget just means the agent stalls out halfway through and someone still has to come
+back and finish it by hand. Skip that mapping and every task defaults to whatever the
+harness happens to reach for, which is usually more than it needs.
 
 The harness matters as much as the mapping does. Though I'd rather blame a careless
 engineer, the truth is usually the setup. An agent that re-reads the same file five times
@@ -26,7 +27,8 @@ find out which run you can trust. Fixing that means giving the harness an owner 
 version number, then testing it against a known task before trusting it against a new one.
 
 None of this is exciting work. Terrific. It's also the entire job, once a team is running
-enough agents that nobody can watch every session by hand.
+enough agents that nobody can watch every session by hand, and the gap between a linting
+pass and a migration only shows up on the invoice.
 
 A team with real token discipline scales its AI usage. A team without it just scales its
-bill.
+bill for the same afternoon of work.
