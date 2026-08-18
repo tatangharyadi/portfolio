@@ -83,17 +83,28 @@ go straight to the fix list in Output.
 Score each 1 (fully present) / 0.5 (partial) / 0 (absent), with quoted evidence. Weights sum
 to 100:
 
-- **Sentence rhythm & structure** — weight 10. No run of 3+ consecutive sentences within ~5
-  words of each other; every paragraph of 3+ sentences needs at least one sentence under 8
-  words and one over 25. Within a paragraph, no more than 2 sentences share an opener (same
+- **Sentence rhythm & structure** — weight 10. Default (no persona-documented rate): no run
+  of 3+ consecutive sentences within ~5 words of each other; every paragraph of 3+ sentences
+  needs at least one sentence under 8 words and one over 25. If the persona documents its own
+  rate instead (e.g. "very short sentences appear roughly once every 2-3 paragraphs," or a
+  longest-sentence word count rather than a per-paragraph rule), check against that documented
+  rate, not the per-paragraph default — the persona's own measured pattern always overrides
+  this generic floor. Within a paragraph, no more than 2 sentences share an opener (same
   first word or same subject-verb-object shape), and consecutive paragraphs shouldn't open
   with the same template or hold the identical internal shape (claim → because → restate)
   throughout. Quote the draft's shortest and longest sentence, and name any repeated opener.
   Also check paragraph length against the persona's own documented range (the shortest/
   longest paragraph-length note under its Structure habits section, if present) — a draft
-  whose paragraphs run uniformly longer or shorter than that range reads as off-voice even
-  when individual sentences pass; count the draft's shortest and longest paragraph (in
-  sentences) as evidence.
+  whose paragraphs run uniformly longer than that range, or open every single paragraph with
+  the shortest length while never reaching the longest, reads as off-voice even when
+  individual sentences pass. Being under the persona's paragraph-length ceiling is never
+  penalized on its own — only a pattern that never varies (e.g. every paragraph landing at the
+  short end, or every one at the long end) counts as a hit. Count the draft's shortest and
+  longest paragraph (in
+  sentences) as evidence. Score: 1 if none of the five sub-checks above (rhythm-run,
+  short/long-sentence rate, shared openers, paragraph-template repetition, paragraph-length
+  pattern) hit; 0.5 if exactly one hits in isolation; 0 if two or more hit, or any single one
+  hits as a sustained pattern across the draft rather than a one-off.
 - **Specificity** — weight 20. Every paragraph needs one concrete, non-interchangeable
   detail (a number, name, or scenario); flag generic filler that could appear unchanged in
   an article on a different topic, and empty quantifiers ("many benefits," "a variety of,"
