@@ -235,7 +235,9 @@ to 100:
   fine if it's genuinely the most accurate one; the real tell is a *cluster*, or these
   appearing alongside the patterns above. Watch for: "delve", "tapestry",
   "landscape"/"navigate" (figurative), "embark", "unlock", "elevate", "empower", "seamless",
-  "leverage" (verb), "robust", "testament". List any hits and justify or remove each. Score
+  "leverage" (verb), "robust", "testament", "utilize", "harness" (figurative), "streamline",
+  "underscore" (verb), "pivotal", "innovative", "cutting-edge", "realm", "synergy",
+  "underpinnings". List any hits and justify or remove each. Score
   1 if no unjustified hits, 0.5 for one or two isolated unjustified hits, 0 for a cluster.
 - **Formatting & mechanical tells** — weight 5. Independent of wording, these are
   near-mechanical to check: em dash or en dash use beyond what the persona's punctuation
