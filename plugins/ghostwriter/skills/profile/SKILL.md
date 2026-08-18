@@ -40,11 +40,11 @@ for each claim (do not assert a trait without a supporting quote):
   varied — and any recurring opening moves ("And"/"But"/"So" starters, questions, fragments).
 - **Structure habits**: use (or absence) of headers/lists/bold, whether arguments build
   linearly or circle back, how pieces tend to end, and whether paragraphs repeat one shape
-  (e.g. claim-then-evidence every time) or vary it — quote at least two differently-shaped
-  paragraphs if the sample repeats a shape, since a rigid template is itself an AI tell.
-  Count typical paragraph length in sentences (shortest and longest, not just "varies") —
-  this is a distinct, separately countable structural tell from sentence rhythm above, so
-  don't skip it just because sentence rhythm is already documented.
+  (e.g. claim-then-evidence every time) or vary it — if the sample shows more than one shape,
+  quote at least two differently-shaped paragraphs rather than asserting "varies" from one
+  example. Count typical paragraph length in sentences (shortest and longest, not just
+  "varies") — this is a distinct, separately countable structural tell from sentence rhythm
+  above, so don't skip it just because sentence rhythm is already documented.
 - **Transitions & connectors**: the specific transition words/phrases this writer actually
   uses, and ones they clearly avoid (e.g. never "furthermore" or "moreover").
 - **Vocabulary fingerprints**: recurring content words/phrases (not conjunctions, pronouns, or
@@ -53,9 +53,8 @@ for each claim (do not assert a trait without a supporting quote):
   Also note lexical-repetition tolerance: when the same word applies twice in close proximity
   (a sentence or two apart), does this writer repeat it plainly, or reach for a synonym to
   avoid repeating ("elegant variation")? Quote an instance. This is distinct from what recurs
-  across a whole piece above — it's about tolerance for *immediate* repetition, and AI output
-  defaults to synonym-swapping even over short spans where a human writer would just repeat
-  the word.
+  across a whole piece above — it's about tolerance for *immediate* repetition, and it's a
+  countable, actionable field regardless of the writer's answer.
 - **Function-word tendencies**: specific conjunctions, pronouns, or prepositions that recur
   noticeably or are conspicuously avoided (e.g. "but" over "however," dropped relative
   pronouns — "the thing I built" not "the thing that I built") — quote an instance for each,
@@ -65,9 +64,8 @@ for each claim (do not assert a trait without a supporting quote):
   use, exclamation point frequency.
 - **Contraction density**: count contracted forms ("don't", "it's", "they're") against places
   where the expanded form ("do not", "it is", "they are") would've fit grammatically, and give
-  a rough ratio (e.g. "contracts ~90% of the time it could"). AI-generated text skews toward
-  expanded forms even when the persona doesn't, so this is worth measuring even if it feels
-  obvious.
+  a rough ratio (e.g. "contracts ~90% of the time it could") — measure it directly rather than
+  estimating, even when the answer seems obvious from a quick read.
 - **Ornamentation**: rough percentage of sentences containing a simile, metaphor, or elevated
   comparison vs. plain literal ones (e.g. "approximately 20% of sentences are ornamented").
 - **Rhetorical moves**: how they transition between ideas, how they land an ending, use of
