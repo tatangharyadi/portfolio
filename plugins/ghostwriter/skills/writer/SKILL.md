@@ -81,11 +81,7 @@ to a surgical fix instead of rewriting:
    before or after for the paragraph to still read. Confirm the rewrite preserves the
    original claim exactly — same scope, same certainty/hedge level, same attribution, same
    named condition or number — a style fix that quietly softens a claim or drops who said it
-   is a new problem, not a fix. When a fix list flags more than one paragraph for the same
-   kind of issue (e.g. several "add a concrete detail" notes), don't reach for the same
-   contrast, example, or comparison to satisfy more than one of them — that's how a device
-   that's fine once becomes the density hit `editor`'s sub-check 6 checks for on the
-   re-check. Vary the concrete fix per paragraph.
+   is a new problem, not a fix.
 3. Re-run the fabrication scan above against the whole revised draft. If the editor flagged a
    triad, fix only the quoted line(s) as instructed — don't re-scan the rest of the draft for
    triads yourself; that's `editor`'s job on the re-check.
