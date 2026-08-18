@@ -31,18 +31,26 @@ it's about — ignore topic, plot, and information entirely; a persona built fro
 matter is useless for drafting on a different topic. Extract, with a short quoted example
 for each claim (do not assert a trait without a supporting quote):
 
-- **Sentence rhythm**: shortest and longest sentence length in words (give actual numbers,
-  not just "average"), how often very short (under 8 words) and very long (over 30 words)
-  sentences appear, whether length varies sharply or stays in a narrow band, run-ons vs.
-  fragments, use of one-word or two-word sentences for emphasis.
+- **Sentence rhythm**: shortest, median, and longest sentence length in words (count them —
+  give actual numbers, not a computed average or standard deviation), how often very short
+  (under 8 words) and very long (over 30 words) sentences appear, whether length varies
+  sharply or stays in a narrow band, run-ons vs. fragments, use of one-word or two-word
+  sentences for emphasis.
 - **Openings**: how sentences and paragraphs tend to begin — same structure every time or
   varied — and any recurring opening moves ("And"/"But"/"So" starters, questions, fragments).
 - **Structure habits**: use (or absence) of headers/lists/bold, whether arguments build
-  linearly or circle back, how pieces tend to end.
+  linearly or circle back, how pieces tend to end, and whether paragraphs repeat one shape
+  (e.g. claim-then-evidence every time) or vary it — quote at least two differently-shaped
+  paragraphs if the sample repeats a shape, since a rigid template is itself an AI tell.
 - **Transitions & connectors**: the specific transition words/phrases this writer actually
   uses, and ones they clearly avoid (e.g. never "furthermore" or "moreover").
 - **Vocabulary fingerprints**: recurring words/phrases, contractions vs. formal, jargon level,
   concrete nouns vs. abstractions, swearing/slang if present, regionalisms.
+- **Function-word tendencies**: specific conjunctions, pronouns, or prepositions that recur
+  noticeably or are conspicuously avoided (e.g. "but" over "however," dropped relative
+  pronouns — "the thing I built" not "the thing that I built") — quote an instance for each,
+  don't estimate a frequency; this is unconscious grammatical habit, distinct from the
+  deliberate discourse markers covered under Transitions & connectors above.
 - **Punctuation tells**: em dash frequency, semicolons, ellipses, parentheticals, Oxford comma
   use, exclamation point frequency.
 - **Contraction density**: count contracted forms ("don't", "it's", "they're") against places
@@ -86,6 +94,9 @@ Source samples: writing/samples/<files>
 ...
 
 ## Vocabulary
+...
+
+## Function-word tendencies
 ...
 
 ## Punctuation
