@@ -32,10 +32,10 @@ Run in this order; each skill hands off a specific file to the next:
    handed to it under `writing/samples/`. Run once per person, and re-run (refresh mode) when
    new samples arrive for the same person.
 2. **`writer`** — reads `writing/persona.md`, drafts new content, saves to
-   `writing/drafts/<slug>.md`. Runs its own fabrication scan and a persona-fidelity self-check
-   before calling a draft done, but does **not** run an exhaustive enumerative scan for the
-   specific structural patterns `editor` gates on (triads, device density); see
-   **Pattern-checking boundary** below.
+   `writing/drafts/<slug>.md`. Its only job is fact discipline (the fabrication scan) and
+   matching the documented voice — it runs no AI-tell or structural-pattern check of any
+   kind, not even a holistic one; all of that is `editor`'s job, entirely, and writer depends
+   on the writer→editor loop to catch it. See **Pattern-checking boundary** below.
 3. **`editor`** — grades a file in `writing/drafts/` (or pasted text) against
    `writing/persona.md`. Checks three hard gates first (accuracy/integrity, triad structure,
    device density), then eight weighted checks, for a 0-100 score and a READY / MINOR
@@ -49,24 +49,28 @@ Run in this order; each skill hands off a specific file to the next:
    dev.to. This is a local move only; see **Not in scope** above — actually posting to either
    platform still happens outside these skills.
 
-**Pattern-checking boundary:** an exhaustive, enumerative scan for a specific structural
-pattern `editor` gates on — triads, device density, or any future addition of the same kind —
-is `editor`'s job alone, never `writer`'s. That's narrower than "writer never touches AI-tell
-patterns": `writer/SKILL.md` does keep a holistic one-line self-check ("what would make a
-skeptical reader call this AI-generated?") and steers away from the general AI-tell list while
-composing, both of which stay in place. What's specifically excluded is duplicating `editor`'s
-gate-level pattern scan inside `writer`'s own pass. `writer` used to duplicate the triad check
-that way in its before-finalizing pass, and a self-scan run by the same pass that generated the
-prose caught only 1 of 3 real hits in one drafting session, while `editor` caught all of them;
-a surgical revision-mode fix to the flagged lines (no self-scan) didn't introduce a new one on
-that same draft. When device density was later added as a check, the first draft of that
-change also added a "don't reuse this device across paragraphs" line to `writer`'s revision
-mode — caught and reverted before it shipped, so it's a documentation-gap anecdote (the rule
-wasn't written down yet), not a second instance of writer's self-scan failing. Treat any new
-gate-level pattern check the same way by default: add the scan only to `editor`, don't mirror
-it into `writer`. The triad finding is still a small sample — if a future draft ships with a
-triad or a density violation `editor` should have caught, that's worth re-examining before
-assuming the split is wrong.
+**Pattern-checking boundary:** any AI-tell or structural-pattern check — triads, device
+density, hedging, agency, overused words, formatting tells, ornament density, or any future
+addition of the same kind — is `editor`'s job alone, never `writer`'s, in any form: not an
+exhaustive scan, not a holistic self-check, not steering around the list while composing.
+`writer`'s job is narrower than that: fact discipline (the fabrication scan) and matching the
+documented voice in `writing/persona.md`. It fully depends on the writer→editor loop to catch
+everything else — a draft that matches persona perfectly and still trips an `editor` check is
+expected, not a sign `writer` should have caught it first.
+
+This started narrower and got tightened twice. First, `writer` used to duplicate the triad
+check as an exhaustive scan in its own before-finalizing pass — a self-scan run by the same
+pass that generated the prose caught only 1 of 3 real hits in one drafting session, while
+`editor` caught all of them; a surgical revision-mode fix to the flagged lines (no self-scan)
+didn't introduce a new one on that same draft. That established: never duplicate `editor`'s
+exhaustive gate-level scan inside `writer`. Later, `writer` still kept a lighter holistic
+self-check ("what would make a skeptical reader call this AI-generated?") and general
+AI-tell-list avoidance while composing — both cut on the reasoning that `editor` runs its
+checks unconditionally either way, so a writer-side attempt at the same job buys nothing and
+risks the same self-grading blindness the triad case demonstrated, just at lower stakes.
+Neither cut has its own before/after evidence the way the triad case does; if a future draft's
+`editor` score suffers from writer no longer even attempting AI-tell avoidance, that's worth
+re-examining before assuming the fully-hands-off split is right.
 
 ## Fabrication Discipline
 
