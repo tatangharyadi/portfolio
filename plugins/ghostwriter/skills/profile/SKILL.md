@@ -50,6 +50,12 @@ for each claim (do not assert a trait without a supporting quote):
 - **Vocabulary fingerprints**: recurring content words/phrases (not conjunctions, pronouns, or
   prepositions — those belong under Function-word tendencies below), contractions vs. formal,
   jargon level, concrete nouns vs. abstractions, swearing/slang if present, regionalisms.
+  Also note lexical-repetition tolerance: when the same word applies twice in close proximity
+  (a sentence or two apart), does this writer repeat it plainly, or reach for a synonym to
+  avoid repeating ("elegant variation")? Quote an instance. This is distinct from what recurs
+  across a whole piece above — it's about tolerance for *immediate* repetition, and AI output
+  defaults to synonym-swapping even over short spans where a human writer would just repeat
+  the word.
 - **Function-word tendencies**: specific conjunctions, pronouns, or prepositions that recur
   noticeably or are conspicuously avoided (e.g. "but" over "however," dropped relative
   pronouns — "the thing I built" not "the thing that I built") — quote an instance for each,
