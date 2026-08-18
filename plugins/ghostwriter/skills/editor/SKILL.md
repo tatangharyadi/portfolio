@@ -67,7 +67,7 @@ mindset when the actual evidence is this thin.
 
 ## Hard gates — checked first, override everything else
 
-If either gate fails, stop: the verdict is NEEDS REVISION, skip the numeric score below, and
+If any gate fails, stop: the verdict is NEEDS REVISION, skip the numeric score below, and
 go straight to the fix list in Output.
 
 **Gate — Accuracy & integrity**
@@ -93,15 +93,33 @@ go straight to the fix list in Output.
 - Evidence: quote every triad found in full, including decorated or connector-disguised
   ones. State the count explicitly — "0 triads found" if none, don't skip this silently.
 
-## Scored checks (only if both gates pass)
+**Gate — Device density**
+- Count how many of the draft's paragraphs use the same structural device — a
+  build-then-puncture beat, a paired A-vs-B contrast, a repeated-opener escalation —
+  regardless of whether persona.md documents that device as this person's habit.
+- persona.md documents a device qualitatively (that it happens), never a rate (how often); a
+  device the persona legitimately claims still fails this gate once it appears in a majority
+  of the draft's paragraphs, because real human writing doesn't lean on one favorite move in
+  most paragraphs of a single piece. A device present in a minority of paragraphs is voice;
+  the same device in a majority is architecture.
+- This started as a weighted sub-check under Sentence rhythm & structure and was promoted to
+  a gate: a maximal hit there could only zero out that check's 10-point weight, which left a
+  draft that was otherwise clean at 90/100 — still READY. A whole-piece structural problem
+  needs gate treatment, the same as triads, not a share of one weighted check.
+- Zero-tolerance once the majority threshold is crossed: no partial credit for an otherwise
+  strong draft.
+- Evidence: count paragraphs using the device against total paragraphs, and quote at least
+  two instances of the device recurring. State the fraction explicitly even if it's 0 of N.
+
+## Scored checks (only if all gates pass)
 
 Score each 1 (fully present) / 0.5 (partial) / 0 (absent), with quoted evidence. Weights sum
 to 100:
 
-- **Sentence rhythm & structure** — weight 10. Six sub-checks; each is either a
+- **Sentence rhythm & structure** — weight 10. Five sub-checks; each is either a
   persona-sourced measurement (read persona.md's actual documented value, don't substitute
   editor's own number) or a generic AI-tell (applies regardless of persona, editor's own
-  rule). Score: 1 if none of the six hit; 0.5 if exactly one hits in isolation; 0 if two or
+  rule). Score: 1 if none of the five hit; 0.5 if exactly one hits in isolation; 0 if two or
   more hit, or any single one hits as a sustained pattern rather than a one-off.
   1. **Short/long-sentence rate — persona-sourced.** Check against the persona's Sentence
      rhythm section's own documented rate (e.g. "very short sentences appear roughly once
@@ -136,20 +154,11 @@ to 100:
      each paragraph resolves to, not the surface phrasing it opens with; a paragraph that
      varies its opener but still lands the same claim-then-payoff structure as its neighbors
      still counts as a hit. Same reasoning as #4.
-  6. **Device density — generic AI-tell, persona-independent.** Count how many of the
-     draft's paragraphs use the same structural device — a build-then-puncture beat, a
-     paired A-vs-B contrast, a repeated-opener escalation — regardless of whether persona.md
-     documents that device as this person's habit. persona.md documents a device
-     qualitatively (that it happens), never a rate (how often); a device the persona
-     legitimately claims still becomes a hit once it appears in a majority of the draft's
-     paragraphs, because real human writing doesn't lean on one favorite move in most
-     paragraphs of a single piece. A device present in a minority of paragraphs is voice; the
-     same device in a majority is architecture. Count paragraphs using the device against
-     total paragraphs as evidence.
 
-  Quote the draft's shortest and longest sentence, name any repeated opener, count the
-  draft's shortest and longest paragraph (in sentences), and state the device-count fraction
-  as evidence for all six.
+  Quote the draft's shortest and longest sentence, name any repeated opener, and count the
+  draft's shortest and longest paragraph (in sentences) as evidence for all five. (Device
+  density — the same class of whole-piece structural tell — is its own hard gate above, not
+  a sub-check here.)
 - **Specificity** — weight 20. Every paragraph needs one concrete, non-interchangeable
   detail (a number, name, or scenario); flag generic filler that could appear unchanged in
   an article on a different topic, and empty quantifiers ("many benefits," "a variety of,"
@@ -304,13 +313,14 @@ state a final score without it.
 
 This skill grades; it does not rewrite. Produce:
 
-1. A per-check PASS/FAIL/PARTIAL table with the required evidence for each (the two hard
+1. A per-check PASS/FAIL/PARTIAL table with the required evidence for each (the three hard
    gates first, then the eight scored checks with weight and weighted result).
-2. A prioritized list of every specific line that needs to change and why — triads first,
-   since they're the most common failure mode; ornament density, specificity, and voice
-   match are tied for the heaviest weight among the rest.
+2. A prioritized list of every specific line that needs to change and why — triads and
+   device density first, since gate failures are the most common and most severe failure
+   mode; ornament density, specificity, and voice match are tied for the heaviest weight
+   among the rest.
 3. A final verdict: READY, MINOR REVISION, or NEEDS REVISION, with the score shown per
-   Scoring above. If either hard gate failed, state that explicitly and stop there — skip
+   Scoring above. If any hard gate failed, state that explicitly and stop there — skip
    the numeric score entirely, since the gates override scoring.
 
 Hand the fix list back for the `writer` skill's revision mode to apply — don't rewrite the

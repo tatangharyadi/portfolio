@@ -45,11 +45,12 @@ Write to match the persona's actual habits from `writing/persona.md`, not to a c
 ## Before finalizing (every draft)
 
 Run this as a dedicated last pass, separate from writing itself — do not rely on catching
-these while composing. Triad scanning is deliberately not on this list: the `editor` skill's
-hard gate does that check exhaustively and with zero tolerance, and this session's evidence
-is that a self-scan run by the same pass that generated the prose misses hits the editor
-catches. Spend this pass on what only the writer is positioned to judge — persona fidelity —
-and let `editor` be the backstop for triads.
+these while composing. Exhaustive scanning for triads or device density is deliberately not
+on this list: `editor`'s hard gates do those checks exhaustively and with zero tolerance, and
+this session's evidence is that a self-scan run by the same pass that generated the prose
+misses hits the editor catches. Spend this pass on what only the writer is positioned to
+judge — persona fidelity — and let `editor` be the backstop for gate-level structural
+patterns.
 
 - **Fabrication scan**: tag every specific factual claim — name, number, date, stat,
   attributed quote. Confirm each one traces to the brief, to `writing/persona.md`, or is
@@ -83,8 +84,9 @@ to a surgical fix instead of rewriting:
    named condition or number — a style fix that quietly softens a claim or drops who said it
    is a new problem, not a fix.
 3. Re-run the fabrication scan above against the whole revised draft. If the editor flagged a
-   triad, fix only the quoted line(s) as instructed — don't re-scan the rest of the draft for
-   triads yourself; that's `editor`'s job on the re-check.
+   gate-level issue (a triad, device density), fix only the quoted line(s) as instructed —
+   don't re-scan the rest of the draft for that pattern yourself; that's `editor`'s job on the
+   re-check.
 4. Output the full revised draft, not just the changed lines, and save it back to the same
    `writing/drafts/<slug>.md` file.
 5. Below the draft, list each change on one line, naming which flagged issue it addresses.
