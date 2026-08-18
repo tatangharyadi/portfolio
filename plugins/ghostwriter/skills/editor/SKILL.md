@@ -92,32 +92,44 @@ go straight to the fix list in Output.
 Score each 1 (fully present) / 0.5 (partial) / 0 (absent), with quoted evidence. Weights sum
 to 100:
 
-- **Sentence rhythm & structure** — weight 10. Default (no persona-documented rate): no run
-  of 3+ consecutive sentences within ~5 words of each other; every paragraph of 3+ sentences
-  needs at least one sentence under 8 words and one over 25. If the persona documents its own
-  rate instead (e.g. "very short sentences appear roughly once every 2-3 paragraphs," or a
-  longest-sentence word count rather than a per-paragraph rule), check against that documented
-  rate, not the per-paragraph default — the persona's own measured pattern always overrides
-  this generic floor. Within a paragraph, no more than 2 sentences share an opener (same
-  first word or same subject-verb-object shape) — unless the persona's Openings or Quirks
-  section documents repeated-opener escalation as a habitual move (e.g. "repeats the same
-  subject-verb opener across two consecutive sentences for deadpan escalation"), in which
-  case exactly that pattern, at that documented length, is not a hit; only a run longer than
-  what persona documents counts against this sub-check. Consecutive paragraphs shouldn't open
-  with the same template or hold the identical internal shape (claim → because → restate)
-  throughout. Quote the draft's shortest and longest sentence, and name any repeated opener.
-  Also check paragraph length against the persona's own documented range (the shortest/
-  longest paragraph-length note under its Structure habits section, if present) — a draft
-  whose paragraphs run uniformly longer than that range, or open every single paragraph with
-  the shortest length while never reaching the longest, reads as off-voice even when
-  individual sentences pass. Being under the persona's paragraph-length ceiling is never
-  penalized on its own — only a pattern that never varies (e.g. every paragraph landing at the
-  short end, or every one at the long end) counts as a hit. Count the draft's shortest and
-  longest paragraph (in
-  sentences) as evidence. Score: 1 if none of the five sub-checks above (rhythm-run,
-  short/long-sentence rate, shared openers, paragraph-template repetition, paragraph-length
-  pattern) hit; 0.5 if exactly one hits in isolation; 0 if two or more hit, or any single one
-  hits as a sustained pattern across the draft rather than a one-off.
+- **Sentence rhythm & structure** — weight 10. Five sub-checks; each is either a
+  persona-sourced measurement (read persona.md's actual documented value, don't substitute
+  editor's own number) or a generic AI-tell (applies regardless of persona, editor's own
+  rule). Score: 1 if none of the five hit; 0.5 if exactly one hits in isolation; 0 if two or
+  more hit, or any single one hits as a sustained pattern rather than a one-off.
+  1. **Short/long-sentence rate — persona-sourced.** Check against the persona's Sentence
+     rhythm section's own documented rate (e.g. "very short sentences appear roughly once
+     every 2-3 paragraphs," or its stated shortest/median/longest word counts) — that
+     section is a required field in profile's template, so it should be present. Only if
+     it's genuinely missing, flag it as an undocumented field per the policy above and fall
+     back to a generic floor (one sentence under 8 words and one over 25 per paragraph of 3+
+     sentences), naming in the output that the fallback was used.
+  2. **Shared openers — persona-sourced, generic floor as fallback.** Check against the
+     persona's Openings or Quirks section: if it documents repeated-opener escalation as a
+     habitual move (e.g. "repeats the same subject-verb opener across two consecutive
+     sentences for deadpan escalation"), exactly that pattern at that documented length is
+     not a hit — only a run longer than what persona documents counts. If persona documents
+     no opener-repetition pattern at all, the generic AI-tell floor applies instead: no more
+     than 2 sentences share an opener (same first word or same subject-verb-object shape)
+     within a paragraph.
+  3. **Paragraph-length pattern — persona-sourced.** Check against the persona's own
+     documented range (the shortest/longest paragraph-length note under its Structure habits
+     section, if present) — a draft whose paragraphs run uniformly longer than that range, or
+     open every single paragraph with the shortest length while never reaching the longest,
+     reads as off-voice even when individual sentences pass. Being under the persona's
+     paragraph-length ceiling is never penalized on its own — only a pattern that never
+     varies (e.g. every paragraph landing at the short end, or every one at the long end)
+     counts as a hit. If persona.md has no paragraph-length note, flag it as an undocumented
+     field rather than skipping this sub-check silently.
+  4. **Rhythm-run — generic AI-tell.** No run of 3+ consecutive sentences within ~5 words of
+     each other — a monotonous-length pattern reads as machine-generated regardless of whose
+     voice is being imitated; no persona reference needed.
+  5. **Paragraph-template repetition — generic AI-tell.** Consecutive paragraphs shouldn't
+     open with the same template or hold the identical internal shape (claim → because →
+     restate) throughout — same reasoning as #4.
+
+  Quote the draft's shortest and longest sentence, name any repeated opener, and count the
+  draft's shortest and longest paragraph (in sentences) as evidence for all five.
 - **Specificity** — weight 20. Every paragraph needs one concrete, non-interchangeable
   detail (a number, name, or scenario); flag generic filler that could appear unchanged in
   an article on a different topic, and empty quantifiers ("many benefits," "a variety of,"
@@ -236,8 +248,10 @@ to 100:
 - **Ornament density** — weight 20. Enumerate every sentence in the draft, numbered, tagged
   PLAIN or ORNAMENTED (contains a simile, metaphor, or elevated comparison) — a summary
   ratio alone is not acceptable evidence, show the full numbered list. Compare the ratio to
-  the persona's `Ornament baseline` line (default 1-in-3 only if that line is missing from
-  `writing/persona.md`). Being under baseline is never penalized — score 1. Over baseline:
+  the persona's `Ornament baseline` line — a required field in profile's template, so it
+  should be present. Only if it's genuinely missing, flag it as an undocumented field per the
+  policy above and fall back to a generic 1-in-3 floor, naming in the output that the
+  fallback was used. Being under baseline is never penalized — score 1. Over baseline:
   score 1 within 15 percentage points over, 0.5 more than 15 and up to 30 points over, 0
   more than 30 points over.
 
