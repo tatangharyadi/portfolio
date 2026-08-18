@@ -18,13 +18,19 @@ line under `## Punctuation` feed directly into the scored checks below. If it's 
 stop and say the `profile` skill needs to run first.
 
 Several checks below key off a specific persona.md field (a documented rate, a named quirk,
-a baseline line). Where the check states its own explicit fallback default for that field
-(e.g. Ornament density's "default 1-in-3 only if that line is missing"), use it. Where a
-check has no stated fallback and the field is genuinely absent from persona.md, don't
-silently substitute a number or pass the sub-check as if it were satisfied — name the
-missing field in the fix list output and note that a `profile` refresh may need to capture
-it. persona.md's own template requires all of these fields, so this should be rare; treat it
-as a signal, not routine plumbing.
+a baseline line). persona.md's field is always the primary source; editor's own number, where
+one is stated, is a fallback that only fires when the field is genuinely absent — never a
+default that persona merely overrides. When a fallback fires, name it in the fix list output
+as a fallback, not a silent substitution.
+
+Most of these fields (Sentence rhythm, Structure habits' paragraph length, Ornament baseline,
+Contraction baseline) are required by `profile`'s own template, so their fallback should be
+rare — treat it as a signal that a `profile` refresh may be overdue, not routine plumbing.
+One exception: opener-repetition (sub-check 2 of Sentence rhythm & structure, below) has no
+required field — `profile`'s Openings section is qualitative, not a mandated
+repetition-quantifying line — so that particular fallback is expected to fire on any persona
+that doesn't happen to document a repeated-opener habit. Don't flag it as a missing-field
+signal; it's just the normal case for personas without that quirk.
 
 ## Mindset
 
@@ -175,8 +181,14 @@ to 100:
   Quote one plainly-committed line and flag any hits found.
 - **Voice match** — weight 20. Check directly against the persona's Imitation checklist (its
   5 most load-bearing traits) and AI-tell checklist (patterns this person's writing does NOT
-  contain), plus sentence rhythm, transitions, vocabulary, register, and punctuation
-  generally. Also check the draft's lexical-repetition tolerance against the persona's
+  contain), plus the persona's Sentence rhythm, Openings, Transitions & connectors,
+  Vocabulary, Function-word tendencies, Punctuation, and Never does sections by name — don't
+  substitute a vague "register and punctuation generally" pass for reading each section.
+  Function-word tendencies in particular (causal "since"/"as," sentence-initial "Though")
+  is easy to skip because it looks like a minor grammatical tic, but it's load-bearing enough
+  to appear a second time under Quirks — treat a draft's use or non-use of the persona's
+  documented function-word habits as checkable evidence here, same as any other section. Also
+  check the draft's lexical-repetition tolerance against the persona's
   documented baseline (its Vocabulary section, if it notes one): if the persona repeats a
   word plainly on recurrence and the draft instead reaches for a synonym each time
   ("elegant variation"), or vice versa, that's a specific, checkable voice mismatch — quote
@@ -236,7 +248,9 @@ to 100:
   (contracted forms like "don't"/"it's" vs. their expanded equivalents) and compare it
   against the `Contraction baseline` line in `writing/persona.md` (if that line is missing
   because the persona predates this check, fall back to judging contraction use against the
-  samples cited elsewhere in the file) — a draft that expands contractions the persona
+  samples cited elsewhere in the file — persona.md's own quoted evidence, not an editor-owned
+  number, so this still counts as persona-primary rather than a generic substitute) — a draft
+  that expands contractions the persona
   normally uses reads as over-formalized AI text. Flag any semicolon linking two independent
   clauses in non-academic prose (exception: comma-containing lists, e.g. "Austin, TX; Denver,
   CO") and any mid-sentence colon preceded by an incomplete clause ("The problem: nobody
