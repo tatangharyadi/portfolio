@@ -79,15 +79,24 @@ for each claim (do not assert a trait without a supporting quote):
   (a sentence or two apart), does this writer repeat it plainly, or reach for a synonym to
   avoid repeating ("elegant variation")? Quote an instance. This is distinct from what recurs
   across a whole piece above — it's about tolerance for *immediate* repetition, and it's a
-  countable, actionable field regardless of the writer's answer. Also report the hapax
-  legomenon rate — the percentage of distinct words in the sample used exactly once — as a
-  concrete vocabulary-richness number, pulled from the script's `vocabulary.hapax_rate` output
-  rather than estimated, the same way Ornament baseline and Contraction baseline give their
-  sections a measured rate instead of a qualitative impression like "varied vocabulary."
-  Hapax rate is strongly length-dependent (a short sample scores higher than a long one at
-  identical vocabulary richness), so record the sample's word count alongside the rate — pull
-  it from the script's `vocabulary.total_words` output, not a separate estimate, so it stays
-  the same token count the hapax rate itself was computed over — e.g. "~42% hapax rate (~350
+  countable, actionable field regardless of the writer's answer. Also report three vocabulary-
+  richness numbers, all pulled from the script's output rather than estimated, the same way
+  Ornament baseline and Contraction baseline give their sections a measured rate instead of a
+  qualitative impression like "varied vocabulary":
+  - **Hapax legomenon rate** — the percentage of distinct words in the sample used exactly
+    once, from `vocabulary.hapax_rate`. Higher means richer vocabulary.
+  - **Yule's K**, from `vocabulary.yules_k`. More robust to sample length than hapax rate, but
+    still drifts with length, so keep the word-count guard below rather than treating it as a
+    replacement. **Lower K means richer vocabulary — the opposite direction from hapax rate.**
+    Don't average or directly compare the two numbers; report both, each on its own scale.
+  - **Honoré's R**, from `vocabulary.honores_r`. Higher means richer vocabulary (same
+    direction as hapax rate). This can be `null` when every distinct word in the sample is a
+    hapax (an all-unique short sample) — that's an undefined value, not a zero; if `null`,
+    say so explicitly rather than omitting the field or treating it as "no richness."
+  All three are length-dependent to varying degrees (hapax rate most, Yule's K least), so
+  record the sample's word count alongside them — pull it from the script's
+  `vocabulary.total_words` output, not a separate estimate, so it stays the same token count
+  all three were computed over — e.g. "~55% hapax rate, Yule's K ~61, Honoré's R ~1648 (~1550
   words)" — so editor can tell whether a comparison against a draft of very different length is
   even meaningful.
 - **Function-word tendencies**: specific conjunctions, pronouns, or prepositions that recur
@@ -144,8 +153,9 @@ Source samples: writing/samples/<files>
 ...
 
 ## Vocabulary
-Vocabulary richness baseline: <the measured hapax legomenon rate, e.g. "~42% of distinct
-words used exactly once">
+Vocabulary richness baseline: <all three measured numbers together, e.g. "~55% hapax rate,
+Yule's K ~61, Honoré's R ~1648 (~1550 words)" — or "Honoré's R: undefined (all-hapax sample)"
+if that value came back null>
 ...
 
 ## Function-word tendencies

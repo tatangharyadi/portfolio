@@ -9,8 +9,11 @@ Add the repo-local marketplace once (`.claude-plugin/marketplace.json` already d
 and enable `ghostwriter`. The three skills — `profile`, `writer`, `editor` — read and write
 only under `writing/`. `profile` and `editor` also shell out to
 `plugins/ghostwriter/scripts/text_metrics.py`, a dependency-free Python 3 script (standard
-library only) that computes sentence/paragraph/contraction/hapax metrics deterministically —
-no install step for it beyond having `python3` on PATH.
+library only) that computes sentence/paragraph/contraction/vocabulary-richness metrics
+deterministically — no install step for it beyond having `python3` on PATH. Vocabulary
+richness is three numbers (hapax legomenon rate, Yule's K, Honore's R), not one — see
+`profile/SKILL.md`'s Vocabulary fingerprints section for how they combine and which direction
+each one runs.
 
 ## Scope
 
@@ -123,8 +126,9 @@ A usable `writing/persona.md` should have, for every trait it claims:
 
 - **A quoted example** from a real sample — no trait without supporting text.
 - **A concrete number where the section calls for one** — sentence-length range,
-  `Contraction baseline`, `Ornament baseline`, `Vocabulary richness baseline` — not a vague
-  "sometimes" or "often."
+  `Contraction baseline`, `Ornament baseline`, `Vocabulary richness baseline` (hapax rate,
+  Yule's K, and Honore's R together, per `profile/SKILL.md`) — not a vague "sometimes" or
+  "often."
 - **An explicit confidence level** (`low`/`medium`/`high`) tied to sample count/word count,
   not an assumed default.
 - **A "Never does" section** — absence patterns are as identifying as presence ones, and are

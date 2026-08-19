@@ -11,6 +11,7 @@ or anything requiring language understanding -- those stay in the model's
 hands, this only replaces counting.
 """
 import json
+import math
 import re
 import sys
 
@@ -77,20 +78,62 @@ def contraction_stats(text):
     }
 
 
+def yules_k(freq, total_words):
+    """Yule's K: vocabulary-richness measure, more length-robust than hapax rate.
+
+    K = 10000 * (M2 - N) / N^2, where N = total token count and
+    M2 = sum(v_m * m^2) over the word-frequency spectrum (v_m = number of
+    distinct words occurring exactly m times). Lower K means richer
+    vocabulary -- the OPPOSITE direction from hapax_rate, where higher means
+    richer. Callers must not compare the two on the same scale.
+    """
+    if total_words == 0:
+        return None
+    freq_of_freq = {}
+    for c in freq.values():
+        freq_of_freq[c] = freq_of_freq.get(c, 0) + 1
+    m2 = sum((m ** 2) * v_m for m, v_m in freq_of_freq.items())
+    return 10000 * (m2 - total_words) / (total_words ** 2)
+
+
+def honores_r(distinct_words, hapax_words, total_words):
+    """Honore's R: R = 100 * log(N) / (1 - V1/V).
+
+    N = total tokens, V = distinct words, V1 = hapax words. Higher R means
+    richer vocabulary -- same direction as hapax_rate. Undefined (returns
+    None) when every distinct word is a hapax (V1 == V), which is a
+    near-zero-denominator artifact common on very short samples, not a real
+    measurement -- treat None as "not computable", not as a low score.
+    """
+    if total_words == 0 or distinct_words == 0 or distinct_words == hapax_words:
+        return None
+    return 100 * math.log(total_words) / (1 - hapax_words / distinct_words)
+
+
 def hapax_rate(text):
     words = [w.lower() for w in WORD_RE.findall(text) if len(w) > 1 or w.isalpha()]
     if not words:
-        return {"distinct_words": 0, "hapax_words": 0, "hapax_rate": None, "total_words": 0}
+        return {
+            "distinct_words": 0,
+            "hapax_words": 0,
+            "hapax_rate": None,
+            "total_words": 0,
+            "yules_k": None,
+            "honores_r": None,
+        }
     freq = {}
     for w in words:
         freq[w] = freq.get(w, 0) + 1
     distinct = len(freq)
     hapax = sum(1 for c in freq.values() if c == 1)
+    total = len(words)
     return {
         "distinct_words": distinct,
         "hapax_words": hapax,
         "hapax_rate": hapax / distinct,
-        "total_words": len(words),
+        "total_words": total,
+        "yules_k": yules_k(freq, total),
+        "honores_r": honores_r(distinct, hapax, total),
     }
 
 
