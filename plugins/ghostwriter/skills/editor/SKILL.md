@@ -159,13 +159,15 @@ to 100:
      sentence length, then compare paragraphs against *each other*, not against persona.md's
      absolute baseline — a paragraph can sit inside persona's documented range and still be
      an outlier if it's the only one in the draft with zero contractions, or the only one
-     whose average sentence length runs well above the rest, especially if that same
-     paragraph also goes without the persona's documented short-sentence beat for longer
-     than its usual cadence. This catches quiet mid-draft drift a single top-to-bottom read
-     can miss, because the surrounding paragraphs average it out on a whole-piece read. It's
-     distinct from the contraction-ratio check under Formatting & mechanical tells below,
-     which grades the whole draft's contraction ratio against persona's absolute baseline —
-     this one grades paragraphs against the rest of the same draft.
+     whose average sentence length runs well above the rest. This catches quiet mid-draft
+     drift a single top-to-bottom read can miss, because the surrounding paragraphs average
+     it out on a whole-piece read. It's distinct from the contraction-ratio check under
+     Formatting & mechanical tells below, which grades the whole draft's contraction ratio
+     against persona's absolute baseline — this one grades paragraphs against the rest of the
+     same draft. It's also distinct from sub-check 1's short-sentence cadence, which is
+     persona-sourced — don't double-count a paragraph that trips both; if a paragraph's lack
+     of a short-sentence beat is already caught by sub-check 1, this sub-check should key
+     only on contraction rate and sentence length, not cadence.
 
   Quote the draft's shortest and longest sentence, name any repeated opener, count the
   draft's shortest and longest paragraph (in sentences), and for sub-check 6 name any
@@ -228,7 +230,10 @@ to 100:
   documented baseline (its Vocabulary section, if it notes one): if the persona repeats a
   word plainly on recurrence and the draft instead reaches for a synonym each time
   ("elegant variation"), or vice versa, that's a specific, checkable voice mismatch — quote
-  an instance where the draft's choice diverges from the documented baseline. Any phrase of
+  an instance where the draft's choice diverges from the documented baseline. If the persona
+  documents a `Vocabulary richness baseline` (hapax legomenon rate), spot-check the draft's
+  rate against it the same way — a draft running noticeably richer or flatter than the
+  documented baseline is a checkable voice mismatch, not just a vibe. Any phrase of
   4+ consecutive words also appearing verbatim in `writing/samples/` is an automatic 0
   regardless of everything else — that's copying, not style. Name 2 specific persona traits
   and confirm they appear.

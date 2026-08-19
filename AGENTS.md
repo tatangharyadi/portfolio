@@ -118,7 +118,8 @@ A usable `writing/persona.md` should have, for every trait it claims:
 
 - **A quoted example** from a real sample — no trait without supporting text.
 - **A concrete number where the section calls for one** — sentence-length range,
-  `Contraction baseline`, `Ornament baseline` — not a vague "sometimes" or "often."
+  `Contraction baseline`, `Ornament baseline`, `Vocabulary richness baseline` — not a vague
+  "sometimes" or "often."
 - **An explicit confidence level** (`low`/`medium`/`high`) tied to sample count/word count,
   not an assumed default.
 - **A "Never does" section** — absence patterns are as identifying as presence ones, and are
