@@ -95,7 +95,10 @@ def mattr(words, window_size=MATTR_WINDOW):
     Length-robust by construction (every window is the same size), unlike a
     single whole-text TTR or hapax rate, which shrink as a text grows. Higher
     means richer vocabulary. Returns None if the text is shorter than one
-    window -- there's nothing to slide.
+    window -- there's nothing to slide. In practice callers gate on the
+    higher MIN_WORDS_FOR_RICHNESS floor (100 words) before reaching here, so
+    this window-length check rarely fires through vocabulary_richness(); it's
+    a direct-call safeguard, not the effective minimum.
     """
     n = len(words)
     if n < window_size:
