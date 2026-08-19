@@ -17,6 +17,36 @@ Read `writing/persona.md` in full — the Imitation checklist, AI-tell checklist
 line under `## Punctuation` feed directly into the scored checks below. If it's missing,
 stop and say the `profile` skill needs to run first.
 
+Several checks below key off a specific persona.md field (a documented rate, a named quirk,
+a baseline line). persona.md's field is always the primary source; editor's own number, where
+one is stated, is a fallback that only fires when the field is genuinely absent — never a
+default that persona merely overrides. When a fallback fires, name it in the fix list output
+as a fallback, not a silent substitution.
+
+Most of these fields (Sentence rhythm, Structure habits' paragraph length, Ornament baseline,
+Contraction baseline) are required by `profile`'s own template, so their fallback should be
+rare — treat it as a signal that a `profile` refresh may be overdue, not routine plumbing.
+One exception: opener-repetition (sub-check 2 of Sentence rhythm & structure, below) has no
+required field — `profile`'s Openings section is qualitative, not a mandated
+repetition-quantifying line — so that particular fallback is expected to fire on any persona
+that doesn't happen to document a repeated-opener habit. Don't flag it as a missing-field
+signal; it's just the normal case for personas without that quirk.
+
+Before scoring, run `python3 ${CLAUDE_PLUGIN_ROOT}/scripts/text_metrics.py <draft-file>`
+against the draft (or a temp file holding pasted text). If `CLAUDE_PLUGIN_ROOT` is unset or
+the path doesn't resolve, fall back to `$(git rev-parse --show-toplevel)/plugins/ghostwriter/scripts/text_metrics.py` —
+resolve the repo root explicitly rather than assuming the current working directory is it.
+It computes sentence-length stats,
+paragraph-length-in-sentences, per-paragraph contraction rate and average sentence length,
+overall contraction rate, vocabulary richness (MATTR, MTLD), shared-opener runs, and rhythm runs directly
+from the text — the exact numbers several checks below ask for, without relying on the
+model's own counting. Use its output as the ground truth for those numbers; everything
+qualitative (whether a device recurs, whether a triad is disguised, whether a hedge reads as
+AI-sounding) still needs the model's read of the actual prose, which the script can't judge.
+If the script's output looks wrong on a specific paragraph (e.g. a mid-sentence quotation
+confusing the sentence splitter), say so and fall back to a manual count for that paragraph
+rather than trusting a bad split silently.
+
 ## Mindset
 
 Run this audit as a skeptical editor reviewing someone else's submission, not as the author
@@ -52,7 +82,7 @@ mindset when the actual evidence is this thin.
 
 ## Hard gates — checked first, override everything else
 
-If either gate fails, stop: the verdict is NEEDS REVISION, skip the numeric score below, and
+If any gate fails, stop: the verdict is NEEDS REVISION, skip the numeric score below, and
 go straight to the fix list in Output.
 
 **Gate — Accuracy & integrity**
@@ -78,17 +108,97 @@ go straight to the fix list in Output.
 - Evidence: quote every triad found in full, including decorated or connector-disguised
   ones. State the count explicitly — "0 triads found" if none, don't skip this silently.
 
-## Scored checks (only if both gates pass)
+**Gate — Device density**
+- Count how many of the draft's paragraphs use the same structural device — a
+  build-then-puncture beat, a paired A-vs-B contrast, a repeated-opener escalation —
+  regardless of whether persona.md documents that device as this person's habit.
+- persona.md documents a device qualitatively (that it happens), never a rate (how often); a
+  device the persona legitimately claims still fails this gate once it appears in a majority
+  of the draft's paragraphs, because real human writing doesn't lean on one favorite move in
+  most paragraphs of a single piece. A device present in a minority of paragraphs is voice;
+  the same device in a majority is architecture.
+- This started as a weighted sub-check under Sentence rhythm & structure and was promoted to
+  a gate: a maximal hit there could only zero out that check's 10-point weight, which left a
+  draft that was otherwise clean at 90/100 — still READY. A whole-piece structural problem
+  needs gate treatment, the same as triads, not a share of one weighted check.
+- Zero-tolerance once the majority threshold is crossed: no partial credit for an otherwise
+  strong draft.
+- Evidence: count paragraphs using the device against total paragraphs, and quote at least
+  two instances of the device recurring. State the fraction explicitly even if it's 0 of N.
+
+## Scored checks (only if all gates pass)
 
 Score each 1 (fully present) / 0.5 (partial) / 0 (absent), with quoted evidence. Weights sum
 to 100:
 
-- **Sentence rhythm & structure** — weight 10. No run of 3+ consecutive sentences within ~5
-  words of each other; every paragraph of 3+ sentences needs at least one sentence under 8
-  words and one over 25. Within a paragraph, no more than 2 sentences share an opener (same
-  first word or same subject-verb-object shape), and consecutive paragraphs shouldn't open
-  with the same template or hold the identical internal shape (claim → because → restate)
-  throughout. Quote the draft's shortest and longest sentence, and name any repeated opener.
+- **Sentence rhythm & structure** — weight 10. Six sub-checks; each is either a
+  persona-sourced measurement (read persona.md's actual documented value, don't substitute
+  editor's own number) or a generic AI-tell (applies regardless of persona, editor's own
+  rule). Score: 1 if none of the six hit; 0.5 if exactly one hits in isolation; 0 if two or
+  more hit, or any single one hits as a sustained pattern rather than a one-off.
+  1. **Short/long-sentence rate — persona-sourced.** Check the script's `sentence_length`
+     output against the persona's Sentence rhythm section's own documented rate (e.g. "very
+     short sentences appear roughly once every 2-3 paragraphs," or its stated
+     shortest/median/longest word counts) — that section is a required field in profile's
+     template, so it should be present. Only if it's genuinely missing, flag it as an
+     undocumented field per the policy above and fall back to a generic floor (one sentence
+     under 8 words and one over 25 per paragraph of 3+ sentences), naming in the output that
+     the fallback was used.
+  2. **Shared openers — persona-sourced, generic floor as fallback.** Check the script's
+     `shared_opener_runs` output against the persona's Openings or Quirks section: if it
+     documents repeated-opener escalation as a habitual move (e.g. "repeats the same
+     subject-verb opener across two consecutive sentences for deadpan escalation"), exactly
+     that pattern at that documented length is not a hit — only a run longer than what
+     persona documents counts. If persona documents no opener-repetition pattern at all, the
+     generic AI-tell floor applies instead: no more than 2 sentences share an opener within a
+     paragraph (the script's runs are draft-wide, not paragraph-scoped, so confirm a flagged
+     run actually falls inside one paragraph before counting it as a hit).
+  3. **Paragraph-length pattern — persona-sourced.** Check the script's
+     `paragraph_length_in_sentences` output against the persona's own documented range (the
+     shortest/longest paragraph-length note under its Structure habits section, if present) —
+     a draft whose paragraphs run uniformly longer than that range, or open every single
+     paragraph with the shortest length while never reaching the longest, reads as off-voice
+     even when individual sentences pass. Being under the persona's paragraph-length ceiling
+     is never penalized on its own — only a pattern that never varies (e.g. every paragraph
+     landing at the short end, or every one at the long end) counts as a hit. If persona.md
+     has no paragraph-length note, flag it as an undocumented field rather than skipping this
+     sub-check silently.
+  4. **Rhythm-run — generic AI-tell.** Check the script's `rhythm_runs` output: no run of 3+
+     consecutive sentences within ~5 words of each other — a monotonous-length pattern reads
+     as machine-generated regardless of whose voice is being imitated; no persona reference
+     needed.
+  5. **Paragraph-template repetition — generic AI-tell.** Consecutive paragraphs shouldn't
+     hold the identical internal shape (claim → example → implication, or claim → because →
+     restate) throughout, even when their opening words differ — judge the underlying shape
+     each paragraph resolves to, not the surface phrasing it opens with; a paragraph that
+     varies its opener but still lands the same claim-then-payoff structure as its neighbors
+     still counts as a hit. Same reasoning as #4. This is a structural-shape judgment the
+     script can't make — read the paragraphs directly.
+  6. **Paragraph-to-paragraph consistency — self-referential, no persona field needed.** Use
+     the script's per-paragraph `contractions_found` and `avg_sentence_words` fields and
+     compare paragraphs against *each other*, not against persona.md's absolute baseline — a
+     paragraph can sit inside persona's documented range and still be an outlier if it's the
+     only one in the draft with `contractions_found: 0`, or the only one whose average
+     sentence length runs well above the rest. Key this off `contractions_found` (the raw
+     count), not `contraction_rate` — the rate is `null` whenever a paragraph has zero
+     contractions *and* zero matched expandable phrases, which is exactly the zero-contraction
+     outlier this sub-check exists to catch; reading the rate there would silently skip it.
+     This catches quiet mid-draft drift a single top-to-bottom read can miss, because the
+     surrounding paragraphs average it out on a whole-piece read. It's distinct from the
+     contraction-ratio check under Formatting & mechanical tells below, which grades the whole
+     draft's contraction ratio against persona's absolute baseline — this one grades
+     paragraphs against the rest of the same draft. It's also distinct from sub-check 1's
+     short-sentence cadence, which is persona-sourced — don't double-count a paragraph that
+     trips both; if a paragraph's lack of a short-sentence beat is already caught by sub-check
+     1, this sub-check should key only on contraction count and sentence length, not cadence.
+
+  Quote the draft's shortest and longest sentence, name any repeated opener, report the
+  draft's shortest and longest paragraph (in sentences), and for sub-check 6 name any
+  paragraph whose contraction count or average sentence length diverges from the draft's own
+  per-paragraph average, quoting it — as evidence for all six, sourced from the script's
+  output plus a quote for context. (Device density — the same class of whole-piece structural
+  tell — is its own hard gate above, not a sub-check here, and stays a manual read since
+  detecting a recurring rhetorical device isn't something the script measures.)
 - **Specificity** — weight 20. Every paragraph needs one concrete, non-interchangeable
   detail (a number, name, or scenario); flag generic filler that could appear unchanged in
   an article on a different topic, and empty quantifiers ("many benefits," "a variety of,"
@@ -134,10 +244,36 @@ to 100:
   Quote one plainly-committed line and flag any hits found.
 - **Voice match** — weight 20. Check directly against the persona's Imitation checklist (its
   5 most load-bearing traits) and AI-tell checklist (patterns this person's writing does NOT
-  contain), plus sentence rhythm, transitions, vocabulary, register, and punctuation
-  generally. Any phrase of 4+ consecutive words
-  also appearing verbatim in `writing/samples/` is an automatic 0 regardless of everything
-  else — that's copying, not style. Name 2 specific persona traits and confirm they appear.
+  contain), plus the persona's Sentence rhythm, Openings, Transitions & connectors,
+  Vocabulary, Function-word tendencies, Punctuation, and Never does sections by name — don't
+  substitute a vague "register and punctuation generally" pass for reading each section.
+  Function-word tendencies in particular (causal "since"/"as," sentence-initial "Though")
+  is easy to skip because it looks like a minor grammatical tic, but it's load-bearing enough
+  to appear a second time under Quirks — treat a draft's use or non-use of the persona's
+  documented function-word habits as checkable evidence here, same as any other section. Also
+  check the draft's lexical-repetition tolerance against the persona's
+  documented baseline (its Vocabulary section, if it notes one): if the persona repeats a
+  word plainly on recurrence and the draft instead reaches for a synonym each time
+  ("elegant variation"), or vice versa, that's a specific, checkable voice mismatch — quote
+  an instance where the draft's choice diverges from the documented baseline. If the persona
+  documents a `Vocabulary richness baseline` with both numbers — MATTR and MTLD — compare each
+  against the matching script output for the draft (`vocabulary.mattr`, `vocabulary.mtld`).
+  Both run in the same direction (higher means richer vocabulary), so unlike the hapax-rate/
+  Yule's-K pairing this replaced, there's no direction caveat to apply — a draft scoring lower
+  on both is flatter, higher on both is richer. If either value is `null` for the persona's
+  baseline or the draft (`vocabulary.low_confidence: true`, meaning that text was under 100
+  words), skip that comparison and say so rather than treating `null` as a low score. Both are
+  still somewhat length-sensitive below a few hundred words, so only score a numeric mismatch
+  when the draft's `vocabulary.total_words` falls roughly within the word count noted alongside
+  the persona's baseline (e.g. "MATTR ~0.71, MTLD ~62 (~1550 words)"); if the draft's length
+  differs substantially (roughly 2x+ shorter or longer), treat both as directional context
+  only: note the direction of any divergence without penalizing the score. A length-matched
+  draft is needed for a real numeric penalty here, not a judgment call in the moment. A draft
+  running noticeably richer or flatter than the documented baseline is a checkable voice
+  mismatch, not just a vibe. Any phrase of
+  4+ consecutive words also appearing verbatim in `writing/samples/` is an automatic 0
+  regardless of everything else — that's copying, not style. Name 2 specific persona traits
+  and confirm they appear.
 - **Agency & construction** — weight 10. Flag any of:
   - Inanimate or abstract nouns performing human actions ("the complaint becomes a fix,"
     "the data tells us," "the decision emerges," "the market rewards") — name the actual
@@ -177,7 +313,13 @@ to 100:
   fine if it's genuinely the most accurate one; the real tell is a *cluster*, or these
   appearing alongside the patterns above. Watch for: "delve", "tapestry",
   "landscape"/"navigate" (figurative), "embark", "unlock", "elevate", "empower", "seamless",
-  "leverage" (verb), "robust", "testament". List any hits and justify or remove each. Score
+  "leverage" (verb), "robust", "testament", "utilize", "harness" (figurative), "streamline",
+  "underscore" (verb), "pivotal", "innovative", "cutting-edge", "realm", "synergy",
+  "underpinnings". Check any hit against the persona's Vocabulary and Ornamentation sections
+  first — a word the persona's own samples actually use, or one that fits within its
+  documented Ornament baseline rate, is not a hit; this list is a generic floor, not an
+  override of what persona.md already documents as this person's real vocabulary. List any
+  remaining hits and justify or remove each. Score
   1 if no unjustified hits, 0.5 for one or two isolated unjustified hits, 0 for a cluster.
 - **Formatting & mechanical tells** — weight 5. Independent of wording, these are
   near-mechanical to check: em dash or en dash use beyond what the persona's punctuation
@@ -186,12 +328,20 @@ to 100:
   sparingly; inline-header bullet lists ("**Label:** sentence" repeated down a list); Title
   Case In Headings instead of sentence case; emojis decorating headings or bullets; curly
   quotation marks (" ") stacked with other tells rather than appearing alone (most editors
-  auto-curl, so this one only counts in combination). Count the draft's contraction ratio
-  (contracted forms like "don't"/"it's" vs. their expanded equivalents) and compare it
+  auto-curl, so this one only counts in combination). Take the draft's contraction ratio
+  from the script's `contraction.contraction_rate` output and compare it
   against the `Contraction baseline` line in `writing/persona.md` (if that line is missing
   because the persona predates this check, fall back to judging contraction use against the
-  samples cited elsewhere in the file) — a draft that expands contractions the persona
-  normally uses reads as over-formalized AI text. Flag any semicolon linking two independent
+  samples cited elsewhere in the file — persona.md's own quoted evidence, not an editor-owned
+  number, so this still counts as persona-primary rather than a generic substitute) — a draft
+  that expands contractions the persona
+  normally uses reads as over-formalized AI text. Check `contraction.low_confidence` first:
+  it's `true` whenever `expandable_forms_found` is under 2, which means the rate is derived
+  from too few (or zero) matched expandable phrases to trust as a measurement — a draft with
+  several contractions and no matched expandable phrase scores a trivial `1.0` that says
+  nothing about actual contraction discipline. When `low_confidence` is true, don't score the
+  ratio numerically; fall back to a manual read of contraction use against the persona's
+  documented habit instead. Flag any semicolon linking two independent
   clauses in non-academic prose (exception: comma-containing lists, e.g. "Austin, TX; Denver,
   CO") and any mid-sentence colon preceded by an incomplete clause ("The problem: nobody
   tests this," "The answer: start earlier") — both read as AI structural habits in casual or
@@ -202,8 +352,10 @@ to 100:
 - **Ornament density** — weight 20. Enumerate every sentence in the draft, numbered, tagged
   PLAIN or ORNAMENTED (contains a simile, metaphor, or elevated comparison) — a summary
   ratio alone is not acceptable evidence, show the full numbered list. Compare the ratio to
-  the persona's `Ornament baseline` line (default 1-in-3 only if that line is missing from
-  `writing/persona.md`). Being under baseline is never penalized — score 1. Over baseline:
+  the persona's `Ornament baseline` line — a required field in profile's template, so it
+  should be present. Only if it's genuinely missing, flag it as an undocumented field per the
+  policy above and fall back to a generic 1-in-3 floor, naming in the output that the
+  fallback was used. Being under baseline is never penalized — score 1. Over baseline:
   score 1 within 15 percentage points over, 0.5 more than 15 and up to 30 points over, 0
   more than 30 points over.
 
@@ -222,13 +374,14 @@ state a final score without it.
 
 This skill grades; it does not rewrite. Produce:
 
-1. A per-check PASS/FAIL/PARTIAL table with the required evidence for each (the two hard
+1. A per-check PASS/FAIL/PARTIAL table with the required evidence for each (the three hard
    gates first, then the eight scored checks with weight and weighted result).
-2. A prioritized list of every specific line that needs to change and why — triads first,
-   since they're the most common failure mode; ornament density, specificity, and voice
-   match are tied for the heaviest weight among the rest.
+2. A prioritized list of every specific line that needs to change and why — triads and
+   device density first, since gate failures are the most common and most severe failure
+   mode; ornament density, specificity, and voice match are tied for the heaviest weight
+   among the rest.
 3. A final verdict: READY, MINOR REVISION, or NEEDS REVISION, with the score shown per
-   Scoring above. If either hard gate failed, state that explicitly and stop there — skip
+   Scoring above. If any hard gate failed, state that explicitly and stop there — skip
    the numeric score entirely, since the gates override scoring.
 
 Hand the fix list back for the `writer` skill's revision mode to apply — don't rewrite the

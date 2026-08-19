@@ -5,9 +5,15 @@ Agent behavioral guidelines for the `ghostwriter` plugin (`plugins/ghostwriter/`
 
 ## Setup
 
-No install step beyond the plugin itself. Add the repo-local marketplace once
-(`.claude-plugin/marketplace.json` already declares it) and enable `ghostwriter`. The three
-skills — `profile`, `writer`, `editor` — read and write only under `writing/`.
+Add the repo-local marketplace once (`.claude-plugin/marketplace.json` already declares it)
+and enable `ghostwriter`. The three skills — `profile`, `writer`, `editor` — read and write
+only under `writing/`. `profile` and `editor` also shell out to
+`plugins/ghostwriter/scripts/text_metrics.py`, a dependency-free Python 3 script (standard
+library only) that computes sentence/paragraph/contraction/vocabulary-richness metrics
+deterministically — no install step for it beyond having `python3` on PATH. Vocabulary
+richness is two numbers (MATTR and MTLD), both length-robust and both running in the same
+direction — see `profile/SKILL.md`'s Vocabulary fingerprints section for what each measures and
+the minimum sample length they need.
 
 ## Scope
 
@@ -28,16 +34,21 @@ prose, and to catch it when it doesn't. It covers:
 
 Run in this order; each skill hands off a specific file to the next:
 
-1. **`profile`** — reads writing samples, writes `writing/persona.md`. Saves any raw samples
-   handed to it under `writing/samples/`. Run once per person, and re-run (refresh mode) when
-   new samples arrive for the same person.
+1. **`profile`** — runs `text_metrics.py` against each sample for sentence/paragraph/
+   contraction/vocabulary-richness numbers, then reads writing samples qualitatively and writes
+   `writing/persona.md`. Saves any raw samples handed to it under `writing/samples/`. Run
+   once per person, and re-run (refresh mode) when new samples arrive for the same person.
 2. **`writer`** — reads `writing/persona.md`, drafts new content, saves to
-   `writing/drafts/<slug>.md`. Runs its own fabrication scan and a persona-fidelity self-check
-   before calling a draft done — but does **not** scan for triads; see below.
-3. **`editor`** — grades a file in `writing/drafts/` (or pasted text) against
-   `writing/persona.md`. Checks two hard gates first (accuracy/integrity, triad structure),
-   then eight weighted checks, for a 0-100 score and a READY / MINOR REVISION / NEEDS REVISION
-   verdict. Hands back a prioritized fix list — it does not rewrite the draft.
+   `writing/drafts/<slug>.md`. Its only job is fact discipline (the fabrication scan) and
+   matching the documented voice — it runs no AI-tell or structural-pattern check of any
+   kind, not even a holistic one; all of that is `editor`'s job, entirely, and writer depends
+   on the writer→editor loop to catch it. See **Pattern-checking boundary** below.
+3. **`editor`** — also runs `text_metrics.py` against the draft first, then grades a file in
+   `writing/drafts/` (or pasted text) against `writing/persona.md`. Checks three hard gates
+   first (accuracy/integrity, triad structure,
+   device density), then eight weighted checks, for a 0-100 score and a READY / MINOR
+   REVISION / NEEDS REVISION verdict. Hands back a prioritized fix list — it does not rewrite
+   the draft.
 4. If `editor` returns anything short of READY, hand its fix list back to `writer`'s revision
    mode: surgical fixes only to the flagged lines, then back to `editor` for an independent
    re-check. Don't let `writer` self-grade a revision.
@@ -46,14 +57,28 @@ Run in this order; each skill hands off a specific file to the next:
    dev.to. This is a local move only; see **Not in scope** above — actually posting to either
    platform still happens outside these skills.
 
-**Triad-scanning boundary:** `editor`'s hard gate is the sole authority on rule-of-three
-sentence structures — zero tolerance, checked exhaustively. `writer` used to duplicate this
-check in its own before-finalizing pass; it was dropped because a self-scan run by the same
+**Pattern-checking boundary:** any AI-tell or structural-pattern check — triads, device
+density, hedging, agency, overused words, formatting tells, ornament density, or any future
+addition of the same kind — is `editor`'s job alone, never `writer`'s, in any form: not an
+exhaustive scan, not a holistic self-check, not steering around the list while composing.
+`writer`'s job is narrower than that: fact discipline (the fabrication scan) and matching the
+documented voice in `writing/persona.md`. It fully depends on the writer→editor loop to catch
+everything else — a draft that matches persona perfectly and still trips an `editor` check is
+expected, not a sign `writer` should have caught it first.
+
+This started narrower and got tightened twice. First, `writer` used to duplicate the triad
+check as an exhaustive scan in its own before-finalizing pass — a self-scan run by the same
 pass that generated the prose caught only 1 of 3 real hits in one drafting session, while
-`editor` caught all of them, and a surgical revision-mode fix to the flagged lines (no
-self-scan) didn't introduce a new one on that same draft. That's still a small sample —
-if a future draft ships with a triad `editor` should have caught, that's worth re-examining
-before assuming the split is wrong.
+`editor` caught all of them; a surgical revision-mode fix to the flagged lines (no self-scan)
+didn't introduce a new one on that same draft. That established: never duplicate `editor`'s
+exhaustive gate-level scan inside `writer`. Later, `writer` still kept a lighter holistic
+self-check ("what would make a skeptical reader call this AI-generated?") and general
+AI-tell-list avoidance while composing — both cut on the reasoning that `editor` runs its
+checks unconditionally either way, so a writer-side attempt at the same job buys nothing and
+risks the same self-grading blindness the triad case demonstrated, just at lower stakes.
+Neither cut has its own before/after evidence the way the triad case does; if a future draft's
+`editor` score suffers from writer no longer even attempting AI-tell avoidance, that's worth
+re-examining before assuming the fully-hands-off split is right.
 
 ## Fabrication Discipline
 
@@ -101,7 +126,8 @@ A usable `writing/persona.md` should have, for every trait it claims:
 
 - **A quoted example** from a real sample — no trait without supporting text.
 - **A concrete number where the section calls for one** — sentence-length range,
-  `Contraction baseline`, `Ornament baseline` — not a vague "sometimes" or "often."
+  `Contraction baseline`, `Ornament baseline`, `Vocabulary richness baseline` (MATTR and MTLD
+  together, per `profile/SKILL.md`) — not a vague "sometimes" or "often."
 - **An explicit confidence level** (`low`/`medium`/`high`) tied to sample count/word count,
   not an assumed default.
 - **A "Never does" section** — absence patterns are as identifying as presence ones, and are

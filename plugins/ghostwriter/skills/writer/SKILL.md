@@ -33,38 +33,35 @@ Write to match the persona's actual habits from `writing/persona.md`, not to a c
   notes they never use semicolons, don't use semicolons).
 - Reuse their rhetorical moves (direct address, rhetorical questions, anecdote-first, etc.)
   where they fit the content, not on every paragraph.
-- Avoid the AI-tell patterns the `editor` skill checks for — its **Hedging & directness**,
-  **Agency & construction**, **Overused-word clusters**, and **Formatting & mechanical
-  tells** checks in `plugins/ghostwriter/skills/editor/SKILL.md` are the canonical,
-  maintained list (named actor over abstraction, no binary-contrast setups, no "turns out"
-  reveal pivots, no vague attribution, no hedge-stacking, no social-endorsement closers, and
-  more). Read that list directly rather than working from a copy here — a partial copy
-  drifts out of sync as the canonical list grows, which is why this used to be a shorter
-  inline enumeration and no longer is.
+
+Write only against persona.md, not against `editor`'s checklist — AI-tell detection (hedging,
+agency, overused words, formatting tells, ornament density, triads, device density, and
+everything else `editor` checks) is entirely `editor`'s job. Don't steer around, self-check
+for, or otherwise anticipate that list while composing; a draft that faithfully matches the
+persona and still trips an `editor` check comes back through the revision loop below, same as
+any other fix.
 
 ## Before finalizing (every draft)
 
-Run this as a dedicated last pass, separate from writing itself — do not rely on catching
-these while composing. Triad scanning is deliberately not on this list: the `editor` skill's
-hard gate does that check exhaustively and with zero tolerance, and this session's evidence
-is that a self-scan run by the same pass that generated the prose misses hits the editor
-catches. Spend this pass on what only the writer is positioned to judge — persona fidelity —
-and let `editor` be the backstop for triads.
+Run this as a dedicated last pass, separate from writing itself. Writer's job here is narrow:
+fact discipline and persona fidelity — nothing about AI-tell or structural-pattern detection.
+That's `editor`'s job alone, entirely, including triads, device density, hedging, agency,
+overused words, formatting tells, and ornament density; writer doesn't self-scan, holistically
+self-check, or otherwise anticipate any of it here.
 
 - **Fabrication scan**: tag every specific factual claim — name, number, date, stat,
   attributed quote. Confirm each one traces to the brief, to `writing/persona.md`, or is
   clearly fictional detail inside an intentionally fictional piece. Anything else becomes
   `[PLACEHOLDER]`, never a filled-in guess — a flatter true sentence beats a smooth invented
-  one.
+  one. This is a fact-accuracy check, not an AI-tell scan — writer owns it as one of the three
+  enforcement points in AGENTS.md's **Fabrication Discipline** section, independent of the
+  AI-tell boundary above.
 
-- **Self-check**: before calling the draft done, ask "What in this draft would make a
-  skeptical reader say it's AI-generated?" and answer in one line — if you can name
-  something, fix it now rather than leaving it for the `editor` skill to catch. Then
-  re-confirm the fabrication scan above is still clean; a fix made since that scan can
-  reintroduce an unmarked claim.
-
-Only after both scans are clean, do a general pass for ornament density (against the
-`Ornament baseline` line in `writing/persona.md`), hedging, and word clusters.
+- **Persona-match pass**: re-read the draft directly against `writing/persona.md` — its
+  Imitation checklist, sentence rhythm, structure habits, vocabulary, and `Ornament baseline`
+  line — and fix anything that drifted from the documented voice while drafting. This checks
+  fit to persona, not absence of AI-tells; a draft can pass this fully and still get flagged
+  by `editor`, and that's expected, not a sign this pass failed.
 
 ## Revision mode
 
@@ -83,8 +80,9 @@ to a surgical fix instead of rewriting:
    named condition or number — a style fix that quietly softens a claim or drops who said it
    is a new problem, not a fix.
 3. Re-run the fabrication scan above against the whole revised draft. If the editor flagged a
-   triad, fix only the quoted line(s) as instructed — don't re-scan the rest of the draft for
-   triads yourself; that's `editor`'s job on the re-check.
+   gate-level issue (a triad, device density), fix only the quoted line(s) as instructed —
+   don't re-scan the rest of the draft for that pattern yourself; that's `editor`'s job on the
+   re-check.
 4. Output the full revised draft, not just the changed lines, and save it back to the same
    `writing/drafts/<slug>.md` file.
 5. Below the draft, list each change on one line, naming which flagged issue it addresses.
@@ -99,9 +97,6 @@ Tell the user the draft is ready for the `editor` skill.
 
 ## Constraints
 
-- Never pad with generic AI openers ("In today's fast-paced world...", "Let's dive in..."),
-  hedge-everything qualifiers, or a summary-conclusion paragraph unless the persona itself
-  does that.
 - Don't invent facts, numbers, or claims about the person's work — see the fabrication scan
   above.
 - One draft, not options A/B/C, unless the user asked for alternatives.
