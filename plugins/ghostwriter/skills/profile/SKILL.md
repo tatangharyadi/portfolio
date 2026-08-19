@@ -85,9 +85,11 @@ for each claim (do not assert a trait without a supporting quote):
   rather than estimated, the same way Ornament baseline and Contraction baseline give their
   sections a measured rate instead of a qualitative impression like "varied vocabulary."
   Hapax rate is strongly length-dependent (a short sample scores higher than a long one at
-  identical vocabulary richness), so record the sample's word count alongside the rate — e.g.
-  "~42% hapax rate (~350 words)" — so editor can tell whether a comparison against a draft of
-  very different length is even meaningful.
+  identical vocabulary richness), so record the sample's word count alongside the rate — pull
+  it from the script's `vocabulary.total_words` output, not a separate estimate, so it stays
+  the same token count the hapax rate itself was computed over — e.g. "~42% hapax rate (~350
+  words)" — so editor can tell whether a comparison against a draft of very different length is
+  even meaningful.
 - **Function-word tendencies**: specific conjunctions, pronouns, or prepositions that recur
   noticeably or are conspicuously avoided (e.g. "but" over "however," dropped relative
   pronouns — "the thing I built" not "the thing that I built") — quote an instance for each,
