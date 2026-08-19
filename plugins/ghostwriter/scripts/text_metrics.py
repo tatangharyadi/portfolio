@@ -3,7 +3,7 @@
 
 Computes the countable numbers that profile/editor SKILL.md previously asked
 the model to count by eye: sentence-length stats, paragraph-length stats,
-contraction rate, hapax legomenon rate, shared-opener runs, and rhythm runs.
+contraction rate, vocabulary richness (MATTR, MTLD), shared-opener runs, and rhythm runs.
 
 Usage: python3 text_metrics.py <path-to-text-file>
 Prints a single JSON object to stdout. Does not judge voice, tone, ornament,
@@ -11,7 +11,6 @@ or anything requiring language understanding -- those stay in the model's
 hands, this only replaces counting.
 """
 import json
-import math
 import re
 import sys
 
@@ -78,62 +77,90 @@ def contraction_stats(text):
     }
 
 
-def yules_k(freq, total_words):
-    """Yule's K: vocabulary-richness measure, more length-robust than hapax rate.
+MATTR_WINDOW = 50
+MTLD_TTR_THRESHOLD = 0.72
+# Below this many tokens neither measure has enough room to be meaningful.
+# 100 rather than the MATTR_WINDOW value itself: at exactly one window MATTR
+# is just a single plain TTR wearing a moving-average label, not an average
+# of several windows, and MTLD's own literature recommends the same ~100-token
+# floor for its factor-counting math to stop degenerating. Below this, both
+# report None and low_confidence rather than a number that looks precise but isn't.
+MIN_WORDS_FOR_RICHNESS = 100
 
-    K = 10000 * (M2 - N) / N^2, where N = total token count and
-    M2 = sum(v_m * m^2) over the word-frequency spectrum (v_m = number of
-    distinct words occurring exactly m times). Lower K means richer
-    vocabulary -- the OPPOSITE direction from hapax_rate, where higher means
-    richer. Callers must not compare the two on the same scale.
+
+def mattr(words, window_size=MATTR_WINDOW):
+    """Moving-Average Type-Token Ratio: mean TTR over all windows of `window_size`
+    consecutive tokens, sliding one token at a time.
+
+    Length-robust by construction (every window is the same size), unlike a
+    single whole-text TTR or hapax rate, which shrink as a text grows. Higher
+    means richer vocabulary. Returns None if the text is shorter than one
+    window -- there's nothing to slide.
     """
-    if total_words == 0:
+    n = len(words)
+    if n < window_size:
         return None
-    freq_of_freq = {}
-    for c in freq.values():
-        freq_of_freq[c] = freq_of_freq.get(c, 0) + 1
-    m2 = sum((m ** 2) * v_m for m, v_m in freq_of_freq.items())
-    return 10000 * (m2 - total_words) / (total_words ** 2)
+    counts = {}
+    for w in words[:window_size]:
+        counts[w] = counts.get(w, 0) + 1
+    ttrs = [len(counts) / window_size]
+    for i in range(window_size, n):
+        old = words[i - window_size]
+        counts[old] -= 1
+        if counts[old] == 0:
+            del counts[old]
+        new = words[i]
+        counts[new] = counts.get(new, 0) + 1
+        ttrs.append(len(counts) / window_size)
+    return sum(ttrs) / len(ttrs)
 
 
-def honores_r(distinct_words, hapax_words, total_words):
-    """Honore's R: R = 100 * log(N) / (1 - V1/V).
-
-    N = total tokens, V = distinct words, V1 = hapax words. Higher R means
-    richer vocabulary -- same direction as hapax_rate. Undefined (returns
-    None) when every distinct word is a hapax (V1 == V), which is a
-    near-zero-denominator artifact common on very short samples, not a real
-    measurement -- treat None as "not computable", not as a low score.
-    """
-    if total_words == 0 or distinct_words == 0 or distinct_words == hapax_words:
-        return None
-    return 100 * math.log(total_words) / (1 - hapax_words / distinct_words)
-
-
-def hapax_rate(text):
-    words = [w.lower() for w in WORD_RE.findall(text) if len(w) > 1 or w.isalpha()]
-    if not words:
-        return {
-            "distinct_words": 0,
-            "hapax_words": 0,
-            "hapax_rate": None,
-            "total_words": 0,
-            "yules_k": None,
-            "honores_r": None,
-        }
-    freq = {}
+def _mtld_factors(words, ttr_threshold):
+    factors = 0
+    types = set()
+    token_count = 0
     for w in words:
-        freq[w] = freq.get(w, 0) + 1
-    distinct = len(freq)
-    hapax = sum(1 for c in freq.values() if c == 1)
+        token_count += 1
+        types.add(w)
+        if len(types) / token_count <= ttr_threshold:
+            factors += 1
+            types = set()
+            token_count = 0
+    if token_count > 0:
+        ttr = len(types) / token_count
+        # Partial factor for the leftover tail that never dropped to
+        # threshold -- proportional to how close it got.
+        factors += (1 - ttr) / (1 - ttr_threshold)
+    return len(words) / factors if factors > 0 else float(len(words))
+
+
+def mtld(words, ttr_threshold=MTLD_TTR_THRESHOLD):
+    """Measure of Textual Lexical Diversity: average token span needed for TTR
+    to decay to `ttr_threshold`, computed forward and backward and averaged.
+
+    Higher means richer vocabulary -- same direction as MATTR, unlike Yule's
+    K in the measure this replaced. Returns None below MIN_WORDS_FOR_RICHNESS;
+    the factor-counting math degenerates (too few/no resets) on short text.
+    """
+    if len(words) < MIN_WORDS_FOR_RICHNESS:
+        return None
+    forward = _mtld_factors(words, ttr_threshold)
+    backward = _mtld_factors(list(reversed(words)), ttr_threshold)
+    return (forward + backward) / 2
+
+
+def vocabulary_richness(text):
+    words = [w.lower() for w in WORD_RE.findall(text) if len(w) > 1 or w.isalpha()]
     total = len(words)
+    distinct = len(set(words))
+    low_confidence = total < MIN_WORDS_FOR_RICHNESS
     return {
-        "distinct_words": distinct,
-        "hapax_words": hapax,
-        "hapax_rate": hapax / distinct,
         "total_words": total,
-        "yules_k": yules_k(freq, total),
-        "honores_r": honores_r(distinct, hapax, total),
+        "distinct_words": distinct,
+        "mattr": None if low_confidence else mattr(words),
+        "mattr_window": MATTR_WINDOW,
+        "mtld": None if low_confidence else mtld(words),
+        "low_confidence": low_confidence,
     }
 
 
@@ -233,7 +260,7 @@ def analyze(text):
             "longest": max(para_sentence_counts) if para_sentence_counts else None,
         },
         "contraction": contraction_stats(text),
-        "vocabulary": hapax_rate(text),
+        "vocabulary": vocabulary_richness(text),
         "paragraphs": paragraph_reports,
         "shared_opener_runs": shared_opener_runs(all_sentences),
         "rhythm_runs": rhythm_runs(all_sentences),

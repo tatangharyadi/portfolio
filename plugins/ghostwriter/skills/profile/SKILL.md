@@ -14,7 +14,11 @@ description.
 Ask the user for one or more writing samples if none are given: pasted text, a file path,
 or a URL/Medium link they've already fetched into a file. Prefer at least 3 samples and
 600+ words total; if only one short sample is available, say so in the output and mark the
-profile as low-confidence.
+profile as low-confidence. That 600+ total is an aggregate, not a per-sample floor — the
+vocabulary-richness measures below need at least 100 words in a given sample to return a
+number at all, so a set of samples that hits the 600-word total through several short pieces
+can still leave individual samples (and the Vocabulary section built from them) marked
+`low_confidence`. Note this in the output rather than treating it as a fluke.
 
 Confirm all samples share one author before analyzing. A persona is a description of how
 one specific person writes — mixing authors produces a blend that's true of neither. Back a
@@ -36,8 +40,8 @@ Before the qualitative read, run `python3 ${CLAUDE_PLUGIN_ROOT}/scripts/text_met
 `CLAUDE_PLUGIN_ROOT` is unset or the path doesn't resolve, fall back to
 `$(git rev-parse --show-toplevel)/plugins/ghostwriter/scripts/text_metrics.py` — resolve the
 repo root explicitly rather than assuming the current working directory is it. It computes
-sentence-length stats, paragraph-length-in-sentences, contraction rate, and hapax legomenon
-rate directly from the text — the exact numbers several sections below ask for, without
+sentence-length stats, paragraph-length-in-sentences, contraction rate, and vocabulary-richness
+(MATTR, MTLD) directly from the text — the exact numbers several sections below ask for, without
 relying on the model's own counting. Use its output as the source of the numeric fields in
 those sections (Sentence rhythm's word counts, Contraction baseline, Vocabulary richness
 baseline); the model's job is still reading each sample for everything qualitative (openings,
@@ -79,26 +83,27 @@ for each claim (do not assert a trait without a supporting quote):
   (a sentence or two apart), does this writer repeat it plainly, or reach for a synonym to
   avoid repeating ("elegant variation")? Quote an instance. This is distinct from what recurs
   across a whole piece above — it's about tolerance for *immediate* repetition, and it's a
-  countable, actionable field regardless of the writer's answer. Also report three vocabulary-
-  richness numbers, all pulled from the script's output rather than estimated, the same way
+  countable, actionable field regardless of the writer's answer. Also report two vocabulary-
+  richness numbers, both pulled from the script's output rather than estimated, the same way
   Ornament baseline and Contraction baseline give their sections a measured rate instead of a
   qualitative impression like "varied vocabulary":
-  - **Hapax legomenon rate** — the percentage of distinct words in the sample used exactly
-    once, from `vocabulary.hapax_rate`. Higher means richer vocabulary.
-  - **Yule's K**, from `vocabulary.yules_k`. More robust to sample length than hapax rate, but
-    still drifts with length, so keep the word-count guard below rather than treating it as a
-    replacement. **Lower K means richer vocabulary — the opposite direction from hapax rate.**
-    Don't average or directly compare the two numbers; report both, each on its own scale.
-  - **Honoré's R**, from `vocabulary.honores_r`. Higher means richer vocabulary (same
-    direction as hapax rate). This can be `null` when every distinct word in the sample is a
-    hapax (an all-unique short sample) — that's an undefined value, not a zero; if `null`,
-    say so explicitly rather than omitting the field or treating it as "no richness."
-  All three are length-dependent to varying degrees (hapax rate most, Yule's K least), so
-  record the sample's word count alongside them — pull it from the script's
-  `vocabulary.total_words` output, not a separate estimate, so it stays the same token count
-  all three were computed over — e.g. "~55% hapax rate, Yule's K ~61, Honoré's R ~1648 (~1550
-  words)" — so editor can tell whether a comparison against a draft of very different length is
-  even meaningful.
+  - **MATTR** (Moving-Average Type-Token Ratio), from `vocabulary.mattr`. The mean type-token
+    ratio across every 50-word sliding window in the sample — length-robust by construction,
+    since every window is the same size regardless of how long the sample is. Higher means
+    richer vocabulary. `null` below 100 words (`vocabulary.low_confidence: true`) — under that
+    floor there isn't room for more than one or two windows to average across.
+  - **MTLD** (Measure of Textual Lexical Diversity), from `vocabulary.mtld`. The average token
+    span needed for the running type-token ratio to decay to 0.72, computed forward and
+    backward and averaged. Higher means richer vocabulary — same direction as MATTR, so unlike
+    the hapax-rate/Yule's-K pairing this replaced, these two numbers move together and can be
+    read side by side without a direction caveat. Also `null` below 100 words.
+  Both are still somewhat length-sensitive below a few hundred words, so record the sample's
+  word count alongside them — pull it from the script's `vocabulary.total_words` output, not a
+  separate estimate, so it stays the same token count both were computed over — e.g. "MATTR
+  ~0.71, MTLD ~62 (~1550 words)" — so editor can tell whether a comparison against a draft of
+  very different length is even meaningful. If `vocabulary.low_confidence` is `true`, say so
+  explicitly rather than reporting a number, and don't backfill with a manual estimate — below
+  100 words neither measure is meaningful, full stop.
 - **Function-word tendencies**: specific conjunctions, pronouns, or prepositions that recur
   noticeably or are conspicuously avoided (e.g. "but" over "however," dropped relative
   pronouns — "the thing I built" not "the thing that I built") — quote an instance for each,
@@ -153,9 +158,9 @@ Source samples: writing/samples/<files>
 ...
 
 ## Vocabulary
-Vocabulary richness baseline: <all three measured numbers together, e.g. "~55% hapax rate,
-Yule's K ~61, Honoré's R ~1648 (~1550 words)" — or "Honoré's R: undefined (all-hapax sample)"
-if that value came back null>
+Vocabulary richness baseline: <both measured numbers together, e.g. "MATTR ~0.71, MTLD ~62
+(~1550 words)" — or "not computable (sample under 100 words)" if `vocabulary.low_confidence`
+was true>
 ...
 
 ## Function-word tendencies
