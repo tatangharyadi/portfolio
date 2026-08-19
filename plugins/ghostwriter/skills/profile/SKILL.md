@@ -17,9 +17,14 @@ or a URL/Medium link they've already fetched into a file. Prefer at least 3 samp
 profile as low-confidence.
 
 Confirm all samples share one author before analyzing. A persona is a description of how
-one specific person writes — mixing authors produces a blend that's true of neither. If
-samples turn out to be multi-author, flag it to the user instead of merging silently, and
-prefer building from the single largest-author subset over shipping a blended profile.
+one specific person writes — mixing authors produces a blend that's true of neither. Back a
+content read with a quick numeric check: for each sample, count its average sentence length
+and contraction rate; a sample whose numbers diverge sharply from the others (e.g. roughly
+half the contraction rate, or a sentence-length median off by more than a third) is grounds
+to suspect a different author even when the subject matter reads consistently — voice can
+survive a topic switch, these numbers don't usually survive an author switch. If samples
+turn out to be multi-author, flag it to the user instead of merging silently, and prefer
+building from the single largest-author subset over shipping a blended profile.
 
 Save any raw samples handed to you under `writing/samples/` (create the directory if
 missing) so future runs can build on them instead of starting over.
@@ -54,7 +59,11 @@ for each claim (do not assert a trait without a supporting quote):
   (a sentence or two apart), does this writer repeat it plainly, or reach for a synonym to
   avoid repeating ("elegant variation")? Quote an instance. This is distinct from what recurs
   across a whole piece above — it's about tolerance for *immediate* repetition, and it's a
-  countable, actionable field regardless of the writer's answer.
+  countable, actionable field regardless of the writer's answer. Also compute a hapax
+  legomenon rate — the percentage of distinct words in the sample used exactly once — as a
+  concrete vocabulary-richness number; count it directly the same way Ornament baseline and
+  Contraction baseline give their sections a measured rate instead of a qualitative
+  impression like "varied vocabulary."
 - **Function-word tendencies**: specific conjunctions, pronouns, or prepositions that recur
   noticeably or are conspicuously avoided (e.g. "but" over "however," dropped relative
   pronouns — "the thing I built" not "the thing that I built") — quote an instance for each,
@@ -102,6 +111,8 @@ Source samples: writing/samples/<files>
 ...
 
 ## Vocabulary
+Vocabulary richness baseline: <the measured hapax legomenon rate, e.g. "~42% of distinct
+words used exactly once">
 ...
 
 ## Function-word tendencies

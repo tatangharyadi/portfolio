@@ -116,10 +116,10 @@ go straight to the fix list in Output.
 Score each 1 (fully present) / 0.5 (partial) / 0 (absent), with quoted evidence. Weights sum
 to 100:
 
-- **Sentence rhythm & structure** — weight 10. Five sub-checks; each is either a
+- **Sentence rhythm & structure** — weight 10. Six sub-checks; each is either a
   persona-sourced measurement (read persona.md's actual documented value, don't substitute
   editor's own number) or a generic AI-tell (applies regardless of persona, editor's own
-  rule). Score: 1 if none of the five hit; 0.5 if exactly one hits in isolation; 0 if two or
+  rule). Score: 1 if none of the six hit; 0.5 if exactly one hits in isolation; 0 if two or
   more hit, or any single one hits as a sustained pattern rather than a one-off.
   1. **Short/long-sentence rate — persona-sourced.** Check against the persona's Sentence
      rhythm section's own documented rate (e.g. "very short sentences appear roughly once
@@ -154,11 +154,24 @@ to 100:
      each paragraph resolves to, not the surface phrasing it opens with; a paragraph that
      varies its opener but still lands the same claim-then-payoff structure as its neighbors
      still counts as a hit. Same reasoning as #4.
+  6. **Paragraph-to-paragraph consistency — self-referential, no persona field needed.**
+     Compute each paragraph's contraction rate (contracted vs. expandable forms) and average
+     sentence length, then compare paragraphs against *each other*, not against persona.md's
+     absolute baseline — a paragraph can sit inside persona's documented range and still be
+     an outlier if it's the only one in the draft with zero contractions, or the only one
+     whose average sentence length runs well above the rest, especially if that same
+     paragraph also goes without the persona's documented short-sentence beat for longer
+     than its usual cadence. This catches quiet mid-draft drift a single top-to-bottom read
+     can miss, because the surrounding paragraphs average it out on a whole-piece read. It's
+     distinct from the contraction-ratio check under Formatting & mechanical tells below,
+     which grades the whole draft's contraction ratio against persona's absolute baseline —
+     this one grades paragraphs against the rest of the same draft.
 
-  Quote the draft's shortest and longest sentence, name any repeated opener, and count the
-  draft's shortest and longest paragraph (in sentences) as evidence for all five. (Device
-  density — the same class of whole-piece structural tell — is its own hard gate above, not
-  a sub-check here.)
+  Quote the draft's shortest and longest sentence, name any repeated opener, count the
+  draft's shortest and longest paragraph (in sentences), and for sub-check 6 name any
+  paragraph whose contraction count or average sentence length diverges from the draft's own
+  per-paragraph average, quoting it — as evidence for all six. (Device density — the same
+  class of whole-piece structural tell — is its own hard gate above, not a sub-check here.)
 - **Specificity** — weight 20. Every paragraph needs one concrete, non-interchangeable
   detail (a number, name, or scenario); flag generic filler that could appear unchanged in
   an article on a different topic, and empty quantifiers ("many benefits," "a variety of,"
