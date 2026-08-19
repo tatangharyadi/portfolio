@@ -260,7 +260,7 @@ to 100:
   Yule's K, and Honore's R — compare each against the matching script output for the draft
   (`vocabulary.hapax_rate`, `vocabulary.yules_k`, `vocabulary.honores_r`). If the persona
   predates this three-number baseline and only records a hapax rate, compare that one number
-  alone, name it explicitly as a fallback in the writeup, and flag that the persona is due for
+  alone, name it explicitly as a fallback in the fix list output, and flag that the persona is due for
   a `profile` refresh to pick up Yule's K and Honore's R. Mind the direction: hapax rate and
   Honore's R both run *higher* for richer vocabulary; **Yule's K runs *lower* for richer
   vocabulary** — a draft with a higher Yule's K than the persona's baseline is flatter, not
@@ -276,8 +276,8 @@ to 100:
   the direction of any divergence without penalizing the score. None of the three is robust
   enough to anchor a scored mismatch across that large a length gap; a length-matched draft is
   needed for a real numeric penalty here, not a judgment call in the moment. A draft running
-  noticeably richer or flatter than the documented baseline, on whichever of the three numbers
-  is still trustworthy at the draft's length, is a checkable voice mismatch, not just a vibe. Any phrase of
+  noticeably richer or flatter than the documented baseline is a checkable voice mismatch, not
+  just a vibe. Any phrase of
   4+ consecutive words also appearing verbatim in `writing/samples/` is an automatic 0
   regardless of everything else — that's copying, not style. Name 2 specific persona traits
   and confirm they appear.
