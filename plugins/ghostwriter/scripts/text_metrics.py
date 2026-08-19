@@ -80,7 +80,7 @@ def contraction_stats(text):
 def hapax_rate(text):
     words = [w.lower() for w in WORD_RE.findall(text) if len(w) > 1 or w.isalpha()]
     if not words:
-        return {"distinct_words": 0, "hapax_words": 0, "hapax_rate": None}
+        return {"distinct_words": 0, "hapax_words": 0, "hapax_rate": None, "total_words": 0}
     freq = {}
     for w in words:
         freq[w] = freq.get(w, 0) + 1
@@ -90,6 +90,7 @@ def hapax_rate(text):
         "distinct_words": distinct,
         "hapax_words": hapax,
         "hapax_rate": hapax / distinct,
+        "total_words": len(words),
     }
 
 

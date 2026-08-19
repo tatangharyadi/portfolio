@@ -33,8 +33,9 @@ missing) so future runs can build on them instead of starting over.
 
 Before the qualitative read, run `python3 ${CLAUDE_PLUGIN_ROOT}/scripts/text_metrics.py
 <sample-file>` against each saved sample (or a temp file holding pasted text). If
-`CLAUDE_PLUGIN_ROOT` is unset or the path doesn't resolve, fall back to the path relative to
-the repo root: `plugins/ghostwriter/scripts/text_metrics.py`. It computes
+`CLAUDE_PLUGIN_ROOT` is unset or the path doesn't resolve, fall back to
+`$(git rev-parse --show-toplevel)/plugins/ghostwriter/scripts/text_metrics.py` — resolve the
+repo root explicitly rather than assuming the current working directory is it. It computes
 sentence-length stats, paragraph-length-in-sentences, contraction rate, and hapax legomenon
 rate directly from the text — the exact numbers several sections below ask for, without
 relying on the model's own counting. Use its output as the source of the numeric fields in

@@ -34,8 +34,9 @@ signal; it's just the normal case for personas without that quirk.
 
 Before scoring, run `python3 ${CLAUDE_PLUGIN_ROOT}/scripts/text_metrics.py <draft-file>`
 against the draft (or a temp file holding pasted text). If `CLAUDE_PLUGIN_ROOT` is unset or
-the path doesn't resolve, fall back to the path relative to the repo root:
-`plugins/ghostwriter/scripts/text_metrics.py`. It computes sentence-length stats,
+the path doesn't resolve, fall back to `$(git rev-parse --show-toplevel)/plugins/ghostwriter/scripts/text_metrics.py` —
+resolve the repo root explicitly rather than assuming the current working directory is it.
+It computes sentence-length stats,
 paragraph-length-in-sentences, per-paragraph contraction rate and average sentence length,
 overall contraction rate, hapax legomenon rate, shared-opener runs, and rhythm runs directly
 from the text — the exact numbers several checks below ask for, without relying on the
@@ -257,8 +258,13 @@ to 100:
   an instance where the draft's choice diverges from the documented baseline. If the persona
   documents a `Vocabulary richness baseline` (hapax legomenon rate), compare it against the
   script's `vocabulary.hapax_rate` output for the draft — a draft running noticeably richer or
-  flatter than the documented baseline is a checkable voice mismatch, not just a vibe. Any
-  phrase of
+  flatter than the documented baseline is a checkable voice mismatch, not just a vibe. Hapax
+  rate is length-dependent, so only score this as a numeric mismatch when the draft's
+  `vocabulary.total_words` falls roughly within the word count noted alongside the persona's
+  baseline (e.g. "~42% hapax rate (~350 words)"); if the draft's length differs substantially
+  (roughly 2x+ shorter or longer), treat the comparison as directional context only — note it
+  without penalizing the score, since a short draft scores richer and a long one flatter at
+  identical actual vocabulary richness. Any phrase of
   4+ consecutive words also appearing verbatim in `writing/samples/` is an automatic 0
   regardless of everything else — that's copying, not style. Name 2 specific persona traits
   and confirm they appear.
