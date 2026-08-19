@@ -64,10 +64,16 @@ def contraction_stats(text):
     expandable = len(EXPANDABLE_RE.findall(text))
     total = contractions + expandable
     rate = contractions / total if total else None
+    # With few or no expandable-phrase hits, the rate is dominated by (or
+    # entirely derived from) the contraction count alone -- e.g. any text with
+    # contractions and zero matched expandable phrases scores a trivial 1.0.
+    # Flag it so callers don't present that as a measured baseline.
+    low_confidence = expandable < 2
     return {
         "contractions_found": contractions,
         "expandable_forms_found": expandable,
         "contraction_rate": rate,
+        "low_confidence": low_confidence,
     }
 
 

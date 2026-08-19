@@ -33,7 +33,9 @@ that doesn't happen to document a repeated-opener habit. Don't flag it as a miss
 signal; it's just the normal case for personas without that quirk.
 
 Before scoring, run `python3 ${CLAUDE_PLUGIN_ROOT}/scripts/text_metrics.py <draft-file>`
-against the draft (or a temp file holding pasted text). It computes sentence-length stats,
+against the draft (or a temp file holding pasted text). If `CLAUDE_PLUGIN_ROOT` is unset or
+the path doesn't resolve, fall back to the path relative to the repo root:
+`plugins/ghostwriter/scripts/text_metrics.py`. It computes sentence-length stats,
 paragraph-length-in-sentences, per-paragraph contraction rate and average sentence length,
 overall contraction rate, hapax legomenon rate, shared-opener runs, and rhythm runs directly
 from the text — the exact numbers several checks below ask for, without relying on the
@@ -172,18 +174,22 @@ to 100:
      still counts as a hit. Same reasoning as #4. This is a structural-shape judgment the
      script can't make — read the paragraphs directly.
   6. **Paragraph-to-paragraph consistency — self-referential, no persona field needed.** Use
-     the script's per-paragraph `contraction_rate` and `avg_sentence_words` fields and compare
-     paragraphs against *each other*, not against persona.md's absolute baseline — a paragraph
-     can sit inside persona's documented range and still be an outlier if it's the only one in
-     the draft with zero contractions, or the only one whose average sentence length runs well
-     above the rest. This catches quiet mid-draft drift a single top-to-bottom read can miss,
-     because the surrounding paragraphs average it out on a whole-piece read. It's distinct
-     from the contraction-ratio check under Formatting & mechanical tells below, which grades
-     the whole draft's contraction ratio against persona's absolute baseline — this one grades
+     the script's per-paragraph `contractions_found` and `avg_sentence_words` fields and
+     compare paragraphs against *each other*, not against persona.md's absolute baseline — a
+     paragraph can sit inside persona's documented range and still be an outlier if it's the
+     only one in the draft with `contractions_found: 0`, or the only one whose average
+     sentence length runs well above the rest. Key this off `contractions_found` (the raw
+     count), not `contraction_rate` — the rate is `null` whenever a paragraph has zero
+     contractions *and* zero matched expandable phrases, which is exactly the zero-contraction
+     outlier this sub-check exists to catch; reading the rate there would silently skip it.
+     This catches quiet mid-draft drift a single top-to-bottom read can miss, because the
+     surrounding paragraphs average it out on a whole-piece read. It's distinct from the
+     contraction-ratio check under Formatting & mechanical tells below, which grades the whole
+     draft's contraction ratio against persona's absolute baseline — this one grades
      paragraphs against the rest of the same draft. It's also distinct from sub-check 1's
      short-sentence cadence, which is persona-sourced — don't double-count a paragraph that
      trips both; if a paragraph's lack of a short-sentence beat is already caught by sub-check
-     1, this sub-check should key only on contraction rate and sentence length, not cadence.
+     1, this sub-check should key only on contraction count and sentence length, not cadence.
 
   Quote the draft's shortest and longest sentence, name any repeated opener, report the
   draft's shortest and longest paragraph (in sentences), and for sub-check 6 name any
@@ -317,7 +323,13 @@ to 100:
   samples cited elsewhere in the file — persona.md's own quoted evidence, not an editor-owned
   number, so this still counts as persona-primary rather than a generic substitute) — a draft
   that expands contractions the persona
-  normally uses reads as over-formalized AI text. Flag any semicolon linking two independent
+  normally uses reads as over-formalized AI text. Check `contraction.low_confidence` first:
+  it's `true` whenever `expandable_forms_found` is under 2, which means the rate is derived
+  from too few (or zero) matched expandable phrases to trust as a measurement — a draft with
+  several contractions and no matched expandable phrase scores a trivial `1.0` that says
+  nothing about actual contraction discipline. When `low_confidence` is true, don't score the
+  ratio numerically; fall back to a manual read of contraction use against the persona's
+  documented habit instead. Flag any semicolon linking two independent
   clauses in non-academic prose (exception: comma-containing lists, e.g. "Austin, TX; Denver,
   CO") and any mid-sentence colon preceded by an incomplete clause ("The problem: nobody
   tests this," "The answer: start earlier") — both read as AI structural habits in casual or

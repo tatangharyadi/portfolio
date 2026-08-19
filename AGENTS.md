@@ -5,9 +5,12 @@ Agent behavioral guidelines for the `ghostwriter` plugin (`plugins/ghostwriter/`
 
 ## Setup
 
-No install step beyond the plugin itself. Add the repo-local marketplace once
-(`.claude-plugin/marketplace.json` already declares it) and enable `ghostwriter`. The three
-skills — `profile`, `writer`, `editor` — read and write only under `writing/`.
+Add the repo-local marketplace once (`.claude-plugin/marketplace.json` already declares it)
+and enable `ghostwriter`. The three skills — `profile`, `writer`, `editor` — read and write
+only under `writing/`. `profile` and `editor` also shell out to
+`plugins/ghostwriter/scripts/text_metrics.py`, a dependency-free Python 3 script (standard
+library only) that computes sentence/paragraph/contraction/hapax metrics deterministically —
+no install step for it beyond having `python3` on PATH.
 
 ## Scope
 
@@ -28,16 +31,18 @@ prose, and to catch it when it doesn't. It covers:
 
 Run in this order; each skill hands off a specific file to the next:
 
-1. **`profile`** — reads writing samples, writes `writing/persona.md`. Saves any raw samples
-   handed to it under `writing/samples/`. Run once per person, and re-run (refresh mode) when
-   new samples arrive for the same person.
+1. **`profile`** — runs `text_metrics.py` against each sample for sentence/paragraph/
+   contraction/hapax numbers, then reads writing samples qualitatively and writes
+   `writing/persona.md`. Saves any raw samples handed to it under `writing/samples/`. Run
+   once per person, and re-run (refresh mode) when new samples arrive for the same person.
 2. **`writer`** — reads `writing/persona.md`, drafts new content, saves to
    `writing/drafts/<slug>.md`. Its only job is fact discipline (the fabrication scan) and
    matching the documented voice — it runs no AI-tell or structural-pattern check of any
    kind, not even a holistic one; all of that is `editor`'s job, entirely, and writer depends
    on the writer→editor loop to catch it. See **Pattern-checking boundary** below.
-3. **`editor`** — grades a file in `writing/drafts/` (or pasted text) against
-   `writing/persona.md`. Checks three hard gates first (accuracy/integrity, triad structure,
+3. **`editor`** — also runs `text_metrics.py` against the draft first, then grades a file in
+   `writing/drafts/` (or pasted text) against `writing/persona.md`. Checks three hard gates
+   first (accuracy/integrity, triad structure,
    device density), then eight weighted checks, for a 0-100 score and a READY / MINOR
    REVISION / NEEDS REVISION verdict. Hands back a prioritized fix list — it does not rewrite
    the draft.

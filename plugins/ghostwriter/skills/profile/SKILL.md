@@ -32,7 +32,9 @@ missing) so future runs can build on them instead of starting over.
 ## Measure first
 
 Before the qualitative read, run `python3 ${CLAUDE_PLUGIN_ROOT}/scripts/text_metrics.py
-<sample-file>` against each saved sample (or a temp file holding pasted text). It computes
+<sample-file>` against each saved sample (or a temp file holding pasted text). If
+`CLAUDE_PLUGIN_ROOT` is unset or the path doesn't resolve, fall back to the path relative to
+the repo root: `plugins/ghostwriter/scripts/text_metrics.py`. It computes
 sentence-length stats, paragraph-length-in-sentences, contraction rate, and hapax legomenon
 rate directly from the text — the exact numbers several sections below ask for, without
 relying on the model's own counting. Use its output as the source of the numeric fields in
@@ -81,6 +83,10 @@ for each claim (do not assert a trait without a supporting quote):
   concrete vocabulary-richness number, pulled from the script's `vocabulary.hapax_rate` output
   rather than estimated, the same way Ornament baseline and Contraction baseline give their
   sections a measured rate instead of a qualitative impression like "varied vocabulary."
+  Hapax rate is strongly length-dependent (a short sample scores higher than a long one at
+  identical vocabulary richness), so record the sample's word count alongside the rate — e.g.
+  "~42% hapax rate (~350 words)" — so editor can tell whether a comparison against a draft of
+  very different length is even meaningful.
 - **Function-word tendencies**: specific conjunctions, pronouns, or prepositions that recur
   noticeably or are conspicuously avoided (e.g. "but" over "however," dropped relative
   pronouns — "the thing I built" not "the thing that I built") — quote an instance for each,
@@ -94,7 +100,11 @@ for each claim (do not assert a trait without a supporting quote):
   it directly rather than estimating, even when the answer seems obvious from a quick read.
   The script's expandable-phrase list is a fixed set of common patterns, not exhaustive; if a
   sample's rate looks off from a quick read, spot-check a few sentences by hand before trusting
-  it.
+  it. Check `contraction.low_confidence` before writing the baseline: it's `true` when
+  `expandable_forms_found` is under 2, meaning the rate is a near-empty-denominator artifact
+  (a sample with any contractions and zero matched expandable phrases scores a trivial
+  `1.0`) rather than a real measurement. When it's `true`, don't report the rate as the
+  baseline — say so and fall back to a manual estimate from the sample text instead.
 - **Ornamentation**: rough percentage of sentences containing a simile, metaphor, or elevated
   comparison vs. plain literal ones (e.g. "approximately 20% of sentences are ornamented").
 - **Rhetorical moves**: how they transition between ideas, how they land an ending, use of
