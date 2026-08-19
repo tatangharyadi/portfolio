@@ -29,6 +29,21 @@ building from the single largest-author subset over shipping a blended profile.
 Save any raw samples handed to you under `writing/samples/` (create the directory if
 missing) so future runs can build on them instead of starting over.
 
+## Measure first
+
+Before the qualitative read, run `python3 ${CLAUDE_PLUGIN_ROOT}/scripts/text_metrics.py
+<sample-file>` against each saved sample (or a temp file holding pasted text). It computes
+sentence-length stats, paragraph-length-in-sentences, contraction rate, and hapax legomenon
+rate directly from the text — the exact numbers several sections below ask for, without
+relying on the model's own counting. Use its output as the source of the numeric fields in
+those sections (Sentence rhythm's word counts, Contraction baseline, Vocabulary richness
+baseline); the model's job is still reading each sample for everything qualitative (openings,
+structure, rhetorical moves, ornamentation, what's absent) that a line-counting script can't
+judge. If a sample is short enough that the script's paragraph/sentence split looks wrong on
+inspection, say so and fall back to a manual count for that sample rather than trusting a
+bad split silently. With multiple samples, run the script per sample and note whether the
+numbers agree or diverge — divergence here is also evidence for the single-author check above.
+
 ## Analysis
 
 Read every sample fully before writing anything. Analyze only HOW it's written, not what
@@ -36,8 +51,9 @@ it's about — ignore topic, plot, and information entirely; a persona built fro
 matter is useless for drafting on a different topic. Extract, with a short quoted example
 for each claim (do not assert a trait without a supporting quote):
 
-- **Sentence rhythm**: shortest, median, and longest sentence length in words (count them —
-  give actual numbers, not a computed average or standard deviation), how often very short
+- **Sentence rhythm**: shortest, median, and longest sentence length in words (pull these from
+  the script's `sentence_length` output — give actual numbers, not a computed average or
+  standard deviation), how often very short
   (under 8 words) and very long (over 30 words) sentences appear, whether length varies
   sharply or stays in a narrow band, run-ons vs. fragments, use of one-word or two-word
   sentences for emphasis.
@@ -47,9 +63,10 @@ for each claim (do not assert a trait without a supporting quote):
   linearly or circle back, how pieces tend to end, and whether paragraphs repeat one shape
   (e.g. claim-then-evidence every time) or vary it — if the sample shows more than one shape,
   quote at least two differently-shaped paragraphs rather than asserting "varies" from one
-  example. Count typical paragraph length in sentences (shortest and longest, not just
-  "varies") — this is a distinct, separately countable structural tell from sentence rhythm
-  above, so don't skip it just because sentence rhythm is already documented.
+  example. Report typical paragraph length in sentences (shortest and longest, from the
+  script's `paragraph_length_in_sentences` output, not just "varies") — this is a distinct,
+  separately countable structural tell from sentence rhythm above, so don't skip it just
+  because sentence rhythm is already documented.
 - **Transitions & connectors**: the specific transition words/phrases this writer actually
   uses, and ones they clearly avoid (e.g. never "furthermore" or "moreover").
 - **Vocabulary fingerprints**: recurring content words/phrases (not conjunctions, pronouns, or
@@ -59,11 +76,11 @@ for each claim (do not assert a trait without a supporting quote):
   (a sentence or two apart), does this writer repeat it plainly, or reach for a synonym to
   avoid repeating ("elegant variation")? Quote an instance. This is distinct from what recurs
   across a whole piece above — it's about tolerance for *immediate* repetition, and it's a
-  countable, actionable field regardless of the writer's answer. Also compute a hapax
+  countable, actionable field regardless of the writer's answer. Also report the hapax
   legomenon rate — the percentage of distinct words in the sample used exactly once — as a
-  concrete vocabulary-richness number; count it directly the same way Ornament baseline and
-  Contraction baseline give their sections a measured rate instead of a qualitative
-  impression like "varied vocabulary."
+  concrete vocabulary-richness number, pulled from the script's `vocabulary.hapax_rate` output
+  rather than estimated, the same way Ornament baseline and Contraction baseline give their
+  sections a measured rate instead of a qualitative impression like "varied vocabulary."
 - **Function-word tendencies**: specific conjunctions, pronouns, or prepositions that recur
   noticeably or are conspicuously avoided (e.g. "but" over "however," dropped relative
   pronouns — "the thing I built" not "the thing that I built") — quote an instance for each,
@@ -71,10 +88,13 @@ for each claim (do not assert a trait without a supporting quote):
   deliberate discourse markers covered under Transitions & connectors above.
 - **Punctuation tells**: em dash frequency, semicolons, ellipses, parentheticals, Oxford comma
   use, exclamation point frequency.
-- **Contraction density**: count contracted forms ("don't", "it's", "they're") against places
-  where the expanded form ("do not", "it is", "they are") would've fit grammatically, and give
-  a rough ratio (e.g. "contracts ~90% of the time it could") — measure it directly rather than
-  estimating, even when the answer seems obvious from a quick read.
+- **Contraction density**: pull the ratio of contracted forms ("don't", "it's", "they're")
+  against expandable forms actually found ("do not", "it is", "they are") from the script's
+  `contraction.contraction_rate` output (e.g. "contracts ~90% of the time it could") — measure
+  it directly rather than estimating, even when the answer seems obvious from a quick read.
+  The script's expandable-phrase list is a fixed set of common patterns, not exhaustive; if a
+  sample's rate looks off from a quick read, spot-check a few sentences by hand before trusting
+  it.
 - **Ornamentation**: rough percentage of sentences containing a simile, metaphor, or elevated
   comparison vs. plain literal ones (e.g. "approximately 20% of sentences are ornamented").
 - **Rhetorical moves**: how they transition between ideas, how they land an ending, use of

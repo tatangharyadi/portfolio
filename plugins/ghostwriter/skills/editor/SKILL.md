@@ -32,6 +32,18 @@ repetition-quantifying line — so that particular fallback is expected to fire 
 that doesn't happen to document a repeated-opener habit. Don't flag it as a missing-field
 signal; it's just the normal case for personas without that quirk.
 
+Before scoring, run `python3 ${CLAUDE_PLUGIN_ROOT}/scripts/text_metrics.py <draft-file>`
+against the draft (or a temp file holding pasted text). It computes sentence-length stats,
+paragraph-length-in-sentences, per-paragraph contraction rate and average sentence length,
+overall contraction rate, hapax legomenon rate, shared-opener runs, and rhythm runs directly
+from the text — the exact numbers several checks below ask for, without relying on the
+model's own counting. Use its output as the ground truth for those numbers; everything
+qualitative (whether a device recurs, whether a triad is disguised, whether a hedge reads as
+AI-sounding) still needs the model's read of the actual prose, which the script can't judge.
+If the script's output looks wrong on a specific paragraph (e.g. a mid-sentence quotation
+confusing the sentence splitter), say so and fall back to a manual count for that paragraph
+rather than trusting a bad split silently.
+
 ## Mindset
 
 Run this audit as a skeptical editor reviewing someone else's submission, not as the author
@@ -121,59 +133,65 @@ to 100:
   editor's own number) or a generic AI-tell (applies regardless of persona, editor's own
   rule). Score: 1 if none of the six hit; 0.5 if exactly one hits in isolation; 0 if two or
   more hit, or any single one hits as a sustained pattern rather than a one-off.
-  1. **Short/long-sentence rate — persona-sourced.** Check against the persona's Sentence
-     rhythm section's own documented rate (e.g. "very short sentences appear roughly once
-     every 2-3 paragraphs," or its stated shortest/median/longest word counts) — that
-     section is a required field in profile's template, so it should be present. Only if
-     it's genuinely missing, flag it as an undocumented field per the policy above and fall
-     back to a generic floor (one sentence under 8 words and one over 25 per paragraph of 3+
-     sentences), naming in the output that the fallback was used.
-  2. **Shared openers — persona-sourced, generic floor as fallback.** Check against the
-     persona's Openings or Quirks section: if it documents repeated-opener escalation as a
-     habitual move (e.g. "repeats the same subject-verb opener across two consecutive
-     sentences for deadpan escalation"), exactly that pattern at that documented length is
-     not a hit — only a run longer than what persona documents counts. If persona documents
-     no opener-repetition pattern at all, the generic AI-tell floor applies instead: no more
-     than 2 sentences share an opener (same first word or same subject-verb-object shape)
-     within a paragraph.
-  3. **Paragraph-length pattern — persona-sourced.** Check against the persona's own
-     documented range (the shortest/longest paragraph-length note under its Structure habits
-     section, if present) — a draft whose paragraphs run uniformly longer than that range, or
-     open every single paragraph with the shortest length while never reaching the longest,
-     reads as off-voice even when individual sentences pass. Being under the persona's
-     paragraph-length ceiling is never penalized on its own — only a pattern that never
-     varies (e.g. every paragraph landing at the short end, or every one at the long end)
-     counts as a hit. If persona.md has no paragraph-length note, flag it as an undocumented
-     field rather than skipping this sub-check silently.
-  4. **Rhythm-run — generic AI-tell.** No run of 3+ consecutive sentences within ~5 words of
-     each other — a monotonous-length pattern reads as machine-generated regardless of whose
-     voice is being imitated; no persona reference needed.
+  1. **Short/long-sentence rate — persona-sourced.** Check the script's `sentence_length`
+     output against the persona's Sentence rhythm section's own documented rate (e.g. "very
+     short sentences appear roughly once every 2-3 paragraphs," or its stated
+     shortest/median/longest word counts) — that section is a required field in profile's
+     template, so it should be present. Only if it's genuinely missing, flag it as an
+     undocumented field per the policy above and fall back to a generic floor (one sentence
+     under 8 words and one over 25 per paragraph of 3+ sentences), naming in the output that
+     the fallback was used.
+  2. **Shared openers — persona-sourced, generic floor as fallback.** Check the script's
+     `shared_opener_runs` output against the persona's Openings or Quirks section: if it
+     documents repeated-opener escalation as a habitual move (e.g. "repeats the same
+     subject-verb opener across two consecutive sentences for deadpan escalation"), exactly
+     that pattern at that documented length is not a hit — only a run longer than what
+     persona documents counts. If persona documents no opener-repetition pattern at all, the
+     generic AI-tell floor applies instead: no more than 2 sentences share an opener within a
+     paragraph (the script's runs are draft-wide, not paragraph-scoped, so confirm a flagged
+     run actually falls inside one paragraph before counting it as a hit).
+  3. **Paragraph-length pattern — persona-sourced.** Check the script's
+     `paragraph_length_in_sentences` output against the persona's own documented range (the
+     shortest/longest paragraph-length note under its Structure habits section, if present) —
+     a draft whose paragraphs run uniformly longer than that range, or open every single
+     paragraph with the shortest length while never reaching the longest, reads as off-voice
+     even when individual sentences pass. Being under the persona's paragraph-length ceiling
+     is never penalized on its own — only a pattern that never varies (e.g. every paragraph
+     landing at the short end, or every one at the long end) counts as a hit. If persona.md
+     has no paragraph-length note, flag it as an undocumented field rather than skipping this
+     sub-check silently.
+  4. **Rhythm-run — generic AI-tell.** Check the script's `rhythm_runs` output: no run of 3+
+     consecutive sentences within ~5 words of each other — a monotonous-length pattern reads
+     as machine-generated regardless of whose voice is being imitated; no persona reference
+     needed.
   5. **Paragraph-template repetition — generic AI-tell.** Consecutive paragraphs shouldn't
      hold the identical internal shape (claim → example → implication, or claim → because →
      restate) throughout, even when their opening words differ — judge the underlying shape
      each paragraph resolves to, not the surface phrasing it opens with; a paragraph that
      varies its opener but still lands the same claim-then-payoff structure as its neighbors
-     still counts as a hit. Same reasoning as #4.
-  6. **Paragraph-to-paragraph consistency — self-referential, no persona field needed.**
-     Compute each paragraph's contraction rate (contracted vs. expandable forms) and average
-     sentence length, then compare paragraphs against *each other*, not against persona.md's
-     absolute baseline — a paragraph can sit inside persona's documented range and still be
-     an outlier if it's the only one in the draft with zero contractions, or the only one
-     whose average sentence length runs well above the rest. This catches quiet mid-draft
-     drift a single top-to-bottom read can miss, because the surrounding paragraphs average
-     it out on a whole-piece read. It's distinct from the contraction-ratio check under
-     Formatting & mechanical tells below, which grades the whole draft's contraction ratio
-     against persona's absolute baseline — this one grades paragraphs against the rest of the
-     same draft. It's also distinct from sub-check 1's short-sentence cadence, which is
-     persona-sourced — don't double-count a paragraph that trips both; if a paragraph's lack
-     of a short-sentence beat is already caught by sub-check 1, this sub-check should key
-     only on contraction rate and sentence length, not cadence.
+     still counts as a hit. Same reasoning as #4. This is a structural-shape judgment the
+     script can't make — read the paragraphs directly.
+  6. **Paragraph-to-paragraph consistency — self-referential, no persona field needed.** Use
+     the script's per-paragraph `contraction_rate` and `avg_sentence_words` fields and compare
+     paragraphs against *each other*, not against persona.md's absolute baseline — a paragraph
+     can sit inside persona's documented range and still be an outlier if it's the only one in
+     the draft with zero contractions, or the only one whose average sentence length runs well
+     above the rest. This catches quiet mid-draft drift a single top-to-bottom read can miss,
+     because the surrounding paragraphs average it out on a whole-piece read. It's distinct
+     from the contraction-ratio check under Formatting & mechanical tells below, which grades
+     the whole draft's contraction ratio against persona's absolute baseline — this one grades
+     paragraphs against the rest of the same draft. It's also distinct from sub-check 1's
+     short-sentence cadence, which is persona-sourced — don't double-count a paragraph that
+     trips both; if a paragraph's lack of a short-sentence beat is already caught by sub-check
+     1, this sub-check should key only on contraction rate and sentence length, not cadence.
 
-  Quote the draft's shortest and longest sentence, name any repeated opener, count the
+  Quote the draft's shortest and longest sentence, name any repeated opener, report the
   draft's shortest and longest paragraph (in sentences), and for sub-check 6 name any
   paragraph whose contraction count or average sentence length diverges from the draft's own
-  per-paragraph average, quoting it — as evidence for all six. (Device density — the same
-  class of whole-piece structural tell — is its own hard gate above, not a sub-check here.)
+  per-paragraph average, quoting it — as evidence for all six, sourced from the script's
+  output plus a quote for context. (Device density — the same class of whole-piece structural
+  tell — is its own hard gate above, not a sub-check here, and stays a manual read since
+  detecting a recurring rhetorical device isn't something the script measures.)
 - **Specificity** — weight 20. Every paragraph needs one concrete, non-interchangeable
   detail (a number, name, or scenario); flag generic filler that could appear unchanged in
   an article on a different topic, and empty quantifiers ("many benefits," "a variety of,"
@@ -231,9 +249,10 @@ to 100:
   word plainly on recurrence and the draft instead reaches for a synonym each time
   ("elegant variation"), or vice versa, that's a specific, checkable voice mismatch — quote
   an instance where the draft's choice diverges from the documented baseline. If the persona
-  documents a `Vocabulary richness baseline` (hapax legomenon rate), spot-check the draft's
-  rate against it the same way — a draft running noticeably richer or flatter than the
-  documented baseline is a checkable voice mismatch, not just a vibe. Any phrase of
+  documents a `Vocabulary richness baseline` (hapax legomenon rate), compare it against the
+  script's `vocabulary.hapax_rate` output for the draft — a draft running noticeably richer or
+  flatter than the documented baseline is a checkable voice mismatch, not just a vibe. Any
+  phrase of
   4+ consecutive words also appearing verbatim in `writing/samples/` is an automatic 0
   regardless of everything else — that's copying, not style. Name 2 specific persona traits
   and confirm they appear.
@@ -291,8 +310,8 @@ to 100:
   sparingly; inline-header bullet lists ("**Label:** sentence" repeated down a list); Title
   Case In Headings instead of sentence case; emojis decorating headings or bullets; curly
   quotation marks (" ") stacked with other tells rather than appearing alone (most editors
-  auto-curl, so this one only counts in combination). Count the draft's contraction ratio
-  (contracted forms like "don't"/"it's" vs. their expanded equivalents) and compare it
+  auto-curl, so this one only counts in combination). Take the draft's contraction ratio
+  from the script's `contraction.contraction_rate` output and compare it
   against the `Contraction baseline` line in `writing/persona.md` (if that line is missing
   because the persona predates this check, fall back to judging contraction use against the
   samples cited elsewhere in the file — persona.md's own quoted evidence, not an editor-owned
