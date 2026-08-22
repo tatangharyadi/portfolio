@@ -99,8 +99,11 @@ go straight to the fix list in Output.
 - Check the script's `watermark.invisible_characters_found` output: zero-width spaces/joiners,
   a mid-file byte-order mark, word joiners, variation selectors, combining grapheme joiners,
   bidirectional-formatting controls (embed/override/isolate, Arabic Letter Mark), invisible
-  math operators, and Unicode tag characters (a documented ASCII-smuggling vector — hidden text
-  encoded on tag codepoints) have no legitimate reason to appear in typed prose. Unlike every
+  math operators, Unicode tag characters (a documented ASCII-smuggling vector — hidden text
+  encoded on tag codepoints), and Private Use Area codepoints (U+E000-F8FF and the two
+  supplementary PUA planes — unassigned by definition, so a hit is either a broken font-icon
+  reference or a hidden payload, never legitimate prose) have no legitimate reason to appear
+  in typed prose. Unlike every
   other check in this skill, this isn't a style judgment — it's a technical defect, most often
   introduced by copy-pasting from an AI tool or a formatted document, occasionally a deliberate
   hidden watermark or smuggled payload. The script already excludes two legitimate cases before
@@ -130,8 +133,12 @@ go straight to the fix list in Output.
   the text as written) does NOT gate either — legitimate text can normalize non-identically
   too (an accented letter typed as base+combining-mark, certain CJK/full-width punctuation
   under NFKC), so a hit here is a candidate for a human to look at, not proof of tampering.
-  Note which form(s) show `drift: true`, the `count`, and the `context` in the fix list if
-  either is non-zero; don't fail the gate on them alone.
+  It's `{}` when both forms match; when non-empty, note which form(s) show `drift: true`, the
+  `count`, and the `context` in the fix list — same "note if non-empty" treatment as the other
+  three watermark fields above. On a very long, densely divergent span the script caps its own
+  diff and returns `count: null` with `truncated: true` instead of computing an exact count —
+  treat that the same as a non-zero hit (something to look at) and say the count is unknown
+  rather than reporting `null` as zero.
 - Evidence: quote the `context` field for each hit found, naming the character and its Unicode
   codepoint. State "0 invisible characters found" explicitly if the scan is clean — don't skip
   this silently.

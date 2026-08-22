@@ -45,6 +45,14 @@ WORD_RE = re.compile(r"[A-Za-z']+")
 
 HEADING_RE = re.compile(r"^#{1,6}\s.*$", re.MULTILINE)
 
+# Cap on the (prefix/suffix-trimmed) span diffed in _normalization_drift.
+# difflib.SequenceMatcher with autojunk=False runs up to cubic on long,
+# densely-repetitive divergent input -- measured ~0.3s at 1000 chars in the
+# worst case (a string where nearly every position mismatches), so this
+# stays well under a second even there. Real drift regions are far smaller
+# once trimmed, so this ceiling is rarely reached in practice.
+_DRIFT_DIFF_LIMIT = 1000
+
 # Characters with no legitimate reason to appear in typed prose -- zero-width
 # spacing/joining marks, a mid-file byte-order mark, variation selectors (used
 # by some LLM-watermarking schemes to encode hidden bits), and deprecated
@@ -200,9 +208,14 @@ def _already_classified(cp):
 
 def _unclassified_control_hits(text):
     """Fallback net: any Cf/Cc character not already handled by a specific
-    check above. Catches novel or rare hidden-format characters that haven't
-    been individually enumerated -- a LOW-severity signal, same footing as an
-    exotic space, not a defect on its own."""
+    check above, plus any Private Use Area codepoint (category Co --
+    U+E000-F8FF and the two supplementary PUA planes). PUA codepoints have
+    no assigned meaning and no legitimate reason to appear in typed prose;
+    they're a documented hidden-payload vector same as tag characters, and
+    -- unlike Cf/Cc -- category Co isn't a format/control character, so it
+    would otherwise slip past this fallback net entirely uncaught. Both
+    halves are a LOW-severity signal, same footing as an exotic space, not a
+    defect on their own."""
     counts = {}
     contexts = {}
     for i, ch in enumerate(text):
@@ -211,7 +224,13 @@ def _unclassified_control_hits(text):
         cp = ord(ch)
         if _already_classified(cp):
             continue
-        if unicodedata.category(ch) in ("Cf", "Cc"):
+        category = unicodedata.category(ch)
+        is_pua = (
+            0xE000 <= cp <= 0xF8FF
+            or 0xF0000 <= cp <= 0xFFFFD
+            or 0x100000 <= cp <= 0x10FFFD
+        )
+        if category in ("Cf", "Cc") or is_pua:
             counts[cp] = counts.get(cp, 0) + 1
             contexts.setdefault(cp, text[max(0, i - 20):i + 20].replace("\n", " "))
     return [
@@ -305,22 +324,50 @@ def _normalization_drift(text):
     normalizes non-identically too (e.g. an accented letter typed as
     base+combining-mark, or certain CJK/full-width punctuation under
     NFKC), so this is a candidate for a human to look at, not proof of
-    tampering."""
+    tampering. SequenceMatcher with autojunk=False (needed here since
+    autojunk would silently junk frequent characters on sequences over 200
+    elements, wrecking character-level matching on normal prose) runs up
+    to cubic on long, densely-repetitive divergent spans -- a draft with
+    heavy decomposed accents (e.g. a macOS paste, or French/Vietnamese
+    content) can otherwise hang for minutes. Trimming the matching
+    prefix/suffix first collapses the realistic case (a handful of
+    decomposed characters in otherwise-composed prose) to a near-instant
+    diff; _DRIFT_DIFF_LIMIT then caps the remaining span so even a
+    pathologically repetitive divergence (which trimming alone can't
+    shrink, since every position differs) stays fast."""
     results = {}
     for form in ("NFC", "NFKC"):
         normalized = unicodedata.normalize(form, text)
         if normalized == text:
             results[form] = {"drift": False, "count": 0, "context": None}
             continue
-        matcher = difflib.SequenceMatcher(None, text, normalized, autojunk=False)
+        shorter = min(len(text), len(normalized))
+        prefix = 0
+        while prefix < shorter and text[prefix] == normalized[prefix]:
+            prefix += 1
+        suffix = 0
+        while (suffix < shorter - prefix
+               and text[len(text) - 1 - suffix] == normalized[len(normalized) - 1 - suffix]):
+            suffix += 1
+        mid_text = text[prefix:len(text) - suffix]
+        mid_normalized = normalized[prefix:len(normalized) - suffix]
+        context = text[max(0, prefix - 20):prefix + 20].replace("\n", " ")
+        if max(len(mid_text), len(mid_normalized)) > _DRIFT_DIFF_LIMIT:
+            results[form] = {
+                "drift": True,
+                "count": None,
+                "context": context,
+                "truncated": True,
+            }
+            continue
+        matcher = difflib.SequenceMatcher(None, mid_text, mid_normalized, autojunk=False)
         diffs = [op for op in matcher.get_opcodes() if op[0] != "equal"]
-        idx = diffs[0][1]
         results[form] = {
             "drift": True,
             "count": len(diffs),
-            "context": text[max(0, idx - 20):idx + 20].replace("\n", " "),
+            "context": context,
         }
-    return results
+    return results if any(v["drift"] for v in results.values()) else {}
 
 
 def watermark_scan(text):
