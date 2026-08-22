@@ -214,8 +214,9 @@ def _unclassified_control_hits(text):
     they're a documented hidden-payload vector same as tag characters, and
     -- unlike Cf/Cc -- category Co isn't a format/control character, so it
     would otherwise slip past this fallback net entirely uncaught. Both
-    halves are a LOW-severity signal, same footing as an exotic space, not a
-    defect on their own."""
+    halves land in invisible_characters_found, which editor/SKILL.md treats
+    as zero-tolerance: any non-empty result fails the watermarking gate,
+    regardless of count."""
     counts = {}
     contexts = {}
     for i, ch in enumerate(text):
