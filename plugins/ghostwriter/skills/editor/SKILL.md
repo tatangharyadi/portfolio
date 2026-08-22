@@ -114,6 +114,24 @@ go straight to the fix list in Output.
   does NOT gate — these are ordinary characters a human could type or introduce deliberately
   (e.g. copy-pasting from a word processor, or `&shy;` in HTML source), so just note the count
   in the fix list if non-zero; don't fail the gate on them alone.
+- `watermark.mixed_script_words_found` (a word combining Latin letters with a lookalike
+  Cyrillic/Greek/etc. character, e.g. а Cyrillic "а" inside an otherwise-Latin word) does NOT
+  gate either — same treatment as exotic spaces: reported as a count, not treated as a defect
+  on its own. A homoglyph hit is a review signal, not watermark evidence; note the count and
+  the flagged word(s) in the fix list if non-zero, don't fail the gate on them alone.
+- `watermark.encoded_payloads_found` (a Base64 run that decodes to printable text, or a 32+
+  character hex run) does NOT gate — same treatment as exotic spaces and mixed-script words.
+  This one is especially noisy: a git commit SHA, a UUID, or any legitimate long hex/base64
+  string quoted in the draft matches the same pattern, so a hit here is a candidate for a
+  human to look at, not proof of a hidden payload. Note the count, the `type` (`base64`/
+  `hex`), and (for base64 hits only) the `decoded_preview` in the fix list if non-zero; don't
+  fail the gate on them alone.
+- `watermark.normalization_drift` (whether the text's NFC or NFKC normalized form differs from
+  the text as written) does NOT gate either — legitimate text can normalize non-identically
+  too (an accented letter typed as base+combining-mark, certain CJK/full-width punctuation
+  under NFKC), so a hit here is a candidate for a human to look at, not proof of tampering.
+  Note which form(s) show `drift: true`, the `count`, and the `context` in the fix list if
+  either is non-zero; don't fail the gate on them alone.
 - Evidence: quote the `context` field for each hit found, naming the character and its Unicode
   codepoint. State "0 invisible characters found" explicitly if the scan is clean — don't skip
   this silently.
@@ -361,7 +379,9 @@ to 100:
   pairs together, since prose is normally dense with single-quote apostrophes and sparse with
   double-quote marks — compare each pair against itself for its own ratio, but curly quotes
   alone are never a hit on their own, only in combination per above). `watermark.exotic_spaces_found`
-  (non-breaking spaces, etc.), if non-zero, is worth a note here too, though it doesn't gate
+  (non-breaking spaces, etc.), `watermark.mixed_script_words_found` (homoglyph substitutions),
+  `watermark.encoded_payloads_found` (Base64/hex candidates), and `watermark.normalization_drift`
+  (NFC/NFKC mismatches), if non-zero, are worth a note here too, though none of them gate
   (see the Invisible characters & watermarking hard gate above for what does). Take the draft's contraction ratio
   from the script's `contraction.contraction_rate` output and compare it
   against the `Contraction baseline` line in `writing/persona.md` (if that line is missing

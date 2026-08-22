@@ -10,6 +10,9 @@ Prints a single JSON object to stdout. Does not judge voice, tone, ornament,
 or anything requiring language understanding -- those stay in the model's
 hands, this only replaces counting.
 """
+import base64
+import binascii
+import difflib
 import json
 import re
 import sys
@@ -145,6 +148,180 @@ EXOTIC_SPACE_CHARS = {
     "­": "SOFT HYPHEN",
 }
 
+# Scripts that commonly supply homoglyphs for Latin text -- a Cyrillic or
+# Greek letter substituted into an otherwise-Latin word is invisible at a
+# glance but a distinct hidden-data channel from anything above (it hides in
+# plain sight rather than being literally unrenderable).
+_HOMOGLYPH_SCRIPTS = ("CYRILLIC", "GREEK")
+_WORD_CHARS_RE = re.compile(r"\w{2,}", re.UNICODE)
+
+
+def _script_of(ch):
+    try:
+        name = unicodedata.name(ch)
+    except ValueError:
+        return None
+    for script in ("LATIN",) + _HOMOGLYPH_SCRIPTS:
+        if name.startswith(script + " "):
+            return script
+    return None
+
+
+def _mixed_script_words(text):
+    """Words that mix Latin with a commonly-confused script (Cyrillic/Greek)."""
+    seen = set()
+    hits = []
+    for word in _WORD_CHARS_RE.findall(text):
+        scripts = {s for s in (_script_of(ch) for ch in word) if s}
+        if len(scripts) > 1 and word not in seen:
+            seen.add(word)
+            hits.append({"word": word, "scripts": sorted(scripts)})
+    return hits
+
+
+# Codepoint ranges already classified by a specific check above (including
+# U+FE0F, deliberately exempted from VARIATION_SELECTOR_RE as the ordinary
+# emoji presentation selector). The generic Cf/Cc fallback below must treat
+# these as handled too, or it would re-flag the very codepoints those checks
+# already report -- or, for FE0F, defeat the emoji carve-out.
+def _already_classified(cp):
+    if chr(cp) in ZERO_WIDTH_CHARS:
+        return True
+    if 0xFE00 <= cp <= 0xFE0F or 0xE0100 <= cp <= 0xE01EF:
+        return True
+    if cp == 0x061C or 0x202A <= cp <= 0x202E or 0x2066 <= cp <= 0x2069:
+        return True
+    if 0x2061 <= cp <= 0x2064:
+        return True
+    if cp == 0xE0001 or 0xE0020 <= cp <= 0xE007F:
+        return True
+    return False
+
+
+def _unclassified_control_hits(text):
+    """Fallback net: any Cf/Cc character not already handled by a specific
+    check above. Catches novel or rare hidden-format characters that haven't
+    been individually enumerated -- a LOW-severity signal, same footing as an
+    exotic space, not a defect on its own."""
+    counts = {}
+    contexts = {}
+    for i, ch in enumerate(text):
+        if ch in "\n\r\t":
+            continue
+        cp = ord(ch)
+        if _already_classified(cp):
+            continue
+        if unicodedata.category(ch) in ("Cf", "Cc"):
+            counts[cp] = counts.get(cp, 0) + 1
+            contexts.setdefault(cp, text[max(0, i - 20):i + 20].replace("\n", " "))
+    return [
+        {
+            "char": f"U+{cp:04X}",
+            "name": unicodedata.name(chr(cp), "UNNAMED"),
+            "count": count,
+            "context": contexts[cp],
+        }
+        for cp, count in sorted(counts.items())
+    ]
+
+
+# A run long enough to plausibly be an encoded payload rather than a coincidental
+# run of alphanumerics -- 24+ base64-alphabet characters (6 groups of 4) or 32+
+# hex characters. Both thresholds are deliberately loose; this is a candidate
+# signal for a human to look at, not a decoder, so it should over-report rather
+# than miss a real payload.
+_BASE64_CANDIDATE_RE = re.compile(r"(?:[A-Za-z0-9+/]{4}){6,}(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?")
+_HEX_CANDIDATE_RE = re.compile(r"\b[0-9a-fA-F]{32,}\b")
+
+
+def _decoded_preview(candidate):
+    """Try to decode a base64 candidate and confirm it's mostly-printable text,
+    not just alphanumerics that happen to be a multiple of 4 long. Returns the
+    decoded preview string, or None if it doesn't decode to plausible content."""
+    try:
+        raw = base64.b64decode(candidate, validate=True)
+    except (ValueError, binascii.Error):
+        return None
+    if not raw:
+        return None
+    try:
+        decoded = raw.decode("utf-8")
+    except UnicodeDecodeError:
+        return None
+    printable = sum(1 for c in decoded if c.isprintable() or c in "\n\r\t")
+    if printable / len(decoded) < 0.9:
+        return None
+    return decoded[:80]
+
+
+def _encoded_payloads(text):
+    """Runs of characters that could be a Base64- or hex-encoded hidden
+    payload riding inside otherwise ordinary prose -- a smuggling channel a
+    codepoint-by-codepoint scan can't see, since every character involved is
+    plain ASCII. Reported as a count, not treated as a defect on its own: a
+    git commit SHA, a UUID, or a legitimate short code quoted in the text
+    will also match this pattern, so a hit here is a candidate for a human
+    to look at, not proof of a hidden payload -- only a Base64 candidate
+    that actually decodes to printable text is reported with a preview;
+    hex candidates are reported as-is since decoding tells us nothing about
+    their content."""
+    hits = []
+    seen_spans = set()
+    for m in _BASE64_CANDIDATE_RE.finditer(text):
+        candidate = m.group(0)
+        if len(candidate) < 24:
+            continue
+        preview = _decoded_preview(candidate)
+        if preview is None:
+            continue
+        span = m.span()
+        seen_spans.add(span)
+        hits.append({
+            "type": "base64",
+            "match": candidate[:40] + ("..." if len(candidate) > 40 else ""),
+            "decoded_preview": preview,
+            "context": text[max(0, span[0] - 20):span[1] + 20].replace("\n", " "),
+        })
+    for m in _HEX_CANDIDATE_RE.finditer(text):
+        span = m.span()
+        if span in seen_spans:
+            continue
+        hits.append({
+            "type": "hex",
+            "match": m.group(0)[:40] + ("..." if len(m.group(0)) > 40 else ""),
+            "decoded_preview": None,
+            "context": text[max(0, span[0] - 20):span[1] + 20].replace("\n", " "),
+        })
+    return hits
+
+
+def _normalization_drift(text):
+    """Compare the text against its NFC and NFKC normalized forms. A
+    mismatch means some characters are riding as decomposed combining
+    sequences or compatibility-equivalent codepoints rather than their
+    ordinary composed form -- a Unicode-level substitution a plain
+    codepoint scan for specific known characters wouldn't catch. Reported
+    as a count, not treated as a defect on its own: legitimate text
+    normalizes non-identically too (e.g. an accented letter typed as
+    base+combining-mark, or certain CJK/full-width punctuation under
+    NFKC), so this is a candidate for a human to look at, not proof of
+    tampering."""
+    results = {}
+    for form in ("NFC", "NFKC"):
+        normalized = unicodedata.normalize(form, text)
+        if normalized == text:
+            results[form] = {"drift": False, "count": 0, "context": None}
+            continue
+        matcher = difflib.SequenceMatcher(None, text, normalized, autojunk=False)
+        diffs = [op for op in matcher.get_opcodes() if op[0] != "equal"]
+        idx = diffs[0][1]
+        results[form] = {
+            "drift": True,
+            "count": len(diffs),
+            "context": text[max(0, idx - 20):idx + 20].replace("\n", " "),
+        }
+    return results
+
 
 def watermark_scan(text):
     """Report invisible/hidden Unicode characters and smart-punctuation counts.
@@ -215,6 +392,8 @@ def watermark_scan(text):
             "context": None,
         })
 
+    invisible_hits.extend(_unclassified_control_hits(text))
+
     exotic_spaces = {
         name: text.count(ch) for ch, name in EXOTIC_SPACE_CHARS.items() if text.count(ch)
     }
@@ -222,6 +401,9 @@ def watermark_scan(text):
     return {
         "invisible_characters_found": invisible_hits,
         "exotic_spaces_found": exotic_spaces,
+        "mixed_script_words_found": _mixed_script_words(text),
+        "encoded_payloads_found": _encoded_payloads(text),
+        "normalization_drift": _normalization_drift(text),
         # Double and single quote marks are reported separately -- pooling
         # them would let the apostrophe-heavy single-quote count (or the
         # attribute-heavy double-quote count in markup) drown out the other.
