@@ -97,17 +97,23 @@ go straight to the fix list in Output.
 
 **Gate — Invisible characters & watermarking**
 - Check the script's `watermark.invisible_characters_found` output: zero-width spaces/joiners,
-  a mid-file byte-order mark, word joiners, and variation selectors have no legitimate reason
-  to appear in typed prose. Unlike every other check in this skill, this isn't a style
-  judgment — it's a technical defect, most often introduced by copy-pasting from an AI tool or
-  a formatted document, occasionally a deliberate hidden watermark.
+  a mid-file byte-order mark, word joiners, variation selectors, combining grapheme joiners,
+  bidirectional-formatting controls (embed/override/isolate, Arabic Letter Mark), invisible
+  math operators, and Unicode tag characters (a documented ASCII-smuggling vector — hidden text
+  encoded on tag codepoints) have no legitimate reason to appear in typed prose. Unlike every
+  other check in this skill, this isn't a style judgment — it's a technical defect, most often
+  introduced by copy-pasting from an AI tool or a formatted document, occasionally a deliberate
+  hidden watermark or smuggled payload. The script already excludes two legitimate cases before
+  reporting a hit: a zero-width joiner sandwiched between two emoji (stitching a family/
+  profession emoji into one glyph) and tag characters that form a complete subdivision-flag
+  sequence (e.g. Scotland, Wales, England) — neither reaches this list.
 - Zero-tolerance: any non-empty `invisible_characters_found` list FAILS this gate, regardless
   of count — even one zero-width character is disqualifying, the same way one confirmed triad
   is.
-- `watermark.exotic_spaces_found` (non-breaking spaces, ideographic spaces, etc.) does NOT gate
-  — these are ordinary characters a human could type deliberately (e.g. copy-pasting from a
-  word processor), so just note the count in the fix list if non-zero; don't fail the gate on
-  them alone.
+- `watermark.exotic_spaces_found` (non-breaking spaces, ideographic spaces, soft hyphens, etc.)
+  does NOT gate — these are ordinary characters a human could type or introduce deliberately
+  (e.g. copy-pasting from a word processor, or `&shy;` in HTML source), so just note the count
+  in the fix list if non-zero; don't fail the gate on them alone.
 - Evidence: quote the `context` field for each hit found, naming the character and its Unicode
   codepoint. State "0 invisible characters found" explicitly if the scan is clean — don't skip
   this silently.
@@ -347,10 +353,14 @@ to 100:
   used as a mechanical emphasis tic rather than sparingly; inline-header bullet lists
   ("**Label:** sentence" repeated down a list); Title
   Case In Headings instead of sentence case; emojis decorating headings or bullets; curly
-  quotation marks (" ") stacked with other tells rather than appearing alone (most editors
-  auto-curl, so this one only counts in combination — the script's `watermark.curly_quotes`
-  vs `watermark.straight_quotes` counts give the ratio, but curly quotes alone are never a
-  hit on their own, only in combination per above). `watermark.exotic_spaces_found`
+  quotation marks (" " / ' ') stacked with other tells rather than appearing alone (most
+  editors auto-curl, so this one only counts in combination — the script reports curly vs.
+  straight counts separately for double quotes (`watermark.curly_double_quotes` vs
+  `watermark.straight_double_quotes`) and single quotes/apostrophes
+  (`watermark.curly_single_quotes` vs `watermark.straight_single_quotes`); don't pool the two
+  pairs together, since prose is normally dense with single-quote apostrophes and sparse with
+  double-quote marks — compare each pair against itself for its own ratio, but curly quotes
+  alone are never a hit on their own, only in combination per above). `watermark.exotic_spaces_found`
   (non-breaking spaces, etc.), if non-zero, is worth a note here too, though it doesn't gate
   (see the Invisible characters & watermarking hard gate above for what does). Take the draft's contraction ratio
   from the script's `contraction.contraction_rate` output and compare it

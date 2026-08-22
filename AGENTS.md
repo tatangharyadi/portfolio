@@ -44,9 +44,9 @@ Run in this order; each skill hands off a specific file to the next:
    kind, not even a holistic one; all of that is `editor`'s job, entirely, and writer depends
    on the writer→editor loop to catch it. See **Pattern-checking boundary** below.
 3. **`editor`** — also runs `text_metrics.py` against the draft first, then grades a file in
-   `writing/drafts/` (or pasted text) against `writing/persona.md`. Checks three hard gates
+   `writing/drafts/` (or pasted text) against `writing/persona.md`. Checks four hard gates
    first (accuracy/integrity, triad structure,
-   device density), then eight weighted checks, for a 0-100 score and a READY / MINOR
+   device density, watermarking), then eight weighted checks, for a 0-100 score and a READY / MINOR
    REVISION / NEEDS REVISION verdict. Hands back a prioritized fix list — it does not rewrite
    the draft.
 4. If `editor` returns anything short of READY, hand its fix list back to `writer`'s revision

@@ -13,6 +13,7 @@ hands, this only replaces counting.
 import json
 import re
 import sys
+import unicodedata
 
 CONTRACTION_RE = re.compile(
     r"\b\w+'(t|s|re|ve|ll|d|m)\b", re.IGNORECASE
@@ -54,33 +55,110 @@ ZERO_WIDTH_CHARS = {
     "⁠": "WORD JOINER",
     "﻿": "ZERO WIDTH NO-BREAK SPACE (BOM)",
     "᠎": "MONGOLIAN VOWEL SEPARATOR",
+    "͏": "COMBINING GRAPHEME JOINER",
 }
-VARIATION_SELECTOR_RE = re.compile(r"[︀-️\U000E0100-\U000E01EF]")
+# Categories emoji pictographs and modifiers fall into -- used to recognize a
+# ZERO WIDTH JOINER that's stitching two emoji into one glyph (e.g. the family
+# or profession emoji sequences) rather than smuggling a hidden payload.
+_EMOJI_LIKE_CATEGORIES = {"So", "Sk"}
 
-# Ordinary but non-ASCII spacing characters -- ordinary word processors and
-# copy-paste from formatted documents introduce these routinely, so their
-# presence is reported as a count, not treated as a defect on its own.
+
+def _is_emoji_like(ch):
+    return bool(ch) and unicodedata.category(ch) in _EMOJI_LIKE_CATEGORIES
+
+
+_VARIATION_SELECTOR_SKIP = {"︎", "️"}
+
+
+def _nearest_emoji_neighbor(text, i, step):
+    """Walk from i in `step` direction, skipping presentation variation
+    selectors (U+FE0E/FE0F), and report whether the first substantive
+    character found is emoji-like. Real ZWJ emoji sequences like the
+    rainbow flag (U+1F3F3 U+FE0F U+200D U+1F308) put a variation selector
+    between the base emoji and the joiner, so a naive immediate-neighbor
+    check misses them."""
+    j = i + step
+    while 0 <= j < len(text) and text[j] in _VARIATION_SELECTOR_SKIP:
+        j += step
+    return _is_emoji_like(text[j]) if 0 <= j < len(text) else False
+
+
+def _find_zwj_hits(text):
+    """Positions of ZERO WIDTH JOINER not sandwiched between two emoji."""
+    return [
+        i for i, ch in enumerate(text)
+        if ch == "‍"
+        and not (
+            _nearest_emoji_neighbor(text, i, -1)
+            and _nearest_emoji_neighbor(text, i, 1)
+        )
+    ]
+# U+FE0F (VARIATION SELECTOR-16) is excluded: it's the ordinary emoji
+# presentation selector and appears any time typed prose quotes an emoji, so
+# including it produces false positives unrelated to watermarking.
+VARIATION_SELECTOR_RE = re.compile(r"[\U0000FE00-\U0000FE0E\U000E0100-\U000E01EF]")
+
+# Explicit bidirectional-formatting controls (embed/override/isolate, plus the
+# Arabic Letter Mark) -- these have no reason to appear in typed prose and are
+# a known hidden-payload vector (bidi smuggling), same class of defect as the
+# zero-width characters above.
+BIDI_CONTROL_RE = re.compile(r"[؜‪-‮⁦-⁩]")
+
+# Invisible math operators (function application, invisible times/plus,
+# invisible separator) -- adjacent to the word-joiner codepoint above but a
+# separate block, with no legitimate reason to appear in prose.
+INVISIBLE_OPERATOR_RE = re.compile(r"[⁡-⁤]")
+
+# Unicode tag characters -- originally for subdividing flag emoji, but also a
+# documented "ASCII smuggling" vector where arbitrary hidden ASCII text is
+# encoded on tag codepoints and rides invisibly inside otherwise normal text.
+TAG_CHARS_RE = re.compile(r"[\U000E0001\U000E0020-\U000E007F]")
+
+# A legitimate use of tag characters: subdivision flag emoji (e.g. Scotland,
+# Wales, England) are a black-flag base followed by tag chars spelling the
+# region code and closing with a cancel tag. Strip these before counting
+# TAG_CHARS_RE hits so a human typing one of these flags does not fail the
+# zero-tolerance gate below.
+FLAG_TAG_SEQUENCE_RE = re.compile(r"\U0001F3F4[\U000E0020-\U000E007A]*\U000E007F")
+
+# Ordinary characters a human could type or introduce deliberately -- exotic
+# spacing from word processors and copy-paste, plus soft hyphen, which arrives
+# routinely from `&shy;` in HTML, word-processor hyphenation, and PDF text
+# extraction. Reported as a count, not treated as a defect on its own.
 EXOTIC_SPACE_CHARS = {
     " ": "NO-BREAK SPACE",
     " ": "FIGURE SPACE",
     " ": "THIN SPACE",
     " ": "NARROW NO-BREAK SPACE",
     "　": "IDEOGRAPHIC SPACE",
+    "­": "SOFT HYPHEN",
 }
 
 
 def watermark_scan(text):
     """Report invisible/hidden Unicode characters and smart-punctuation counts.
 
-    Zero-width characters, a mid-file BOM, and variation selectors have no
-    legitimate reason to appear in typed prose -- their presence is a
-    technical artifact (often from copy-pasting AI output, sometimes a
-    deliberate LLM watermark) rather than a stylistic choice, so they're
-    reported separately from the exotic-space/dash/quote counts below, which
-    are ordinary characters a human could type on purpose.
+    Zero-width characters, a mid-file BOM, and variation selectors are
+    reported separately from the exotic-space/dash/quote counts below because
+    their presence is usually a technical artifact (often from copy-pasting
+    AI output, sometimes a deliberate LLM watermark) rather than a stylistic
+    choice -- with narrow, explicitly carved-out exceptions for genuine emoji
+    ZWJ sequences, subdivision-flag tag sequences, and soft hyphens, which are
+    filtered out above before a hit is counted here.
     """
     invisible_hits = []
     for ch, name in ZERO_WIDTH_CHARS.items():
+        if ch == "‍":
+            positions = _find_zwj_hits(text)
+            if positions:
+                idx = positions[0]
+                invisible_hits.append({
+                    "char": f"U+{ord(ch):04X}",
+                    "name": name,
+                    "count": len(positions),
+                    "context": text[max(0, idx - 20):idx + 20].replace("\n", " "),
+                })
+            continue
         count = text.count(ch)
         if count:
             idx = text.index(ch)
@@ -93,9 +171,36 @@ def watermark_scan(text):
     variation_selectors = len(VARIATION_SELECTOR_RE.findall(text))
     if variation_selectors:
         invisible_hits.append({
-            "char": "U+FE00-FE0F / U+E0100-E01EF",
+            "char": "U+FE00-FE0E / U+E0100-E01EF",
             "name": "VARIATION SELECTOR",
             "count": variation_selectors,
+            "context": None,
+        })
+
+    bidi_controls = len(BIDI_CONTROL_RE.findall(text))
+    if bidi_controls:
+        invisible_hits.append({
+            "char": "U+061C / U+202A-202E / U+2066-2069",
+            "name": "BIDIRECTIONAL CONTROL",
+            "count": bidi_controls,
+            "context": None,
+        })
+
+    invisible_operators = len(INVISIBLE_OPERATOR_RE.findall(text))
+    if invisible_operators:
+        invisible_hits.append({
+            "char": "U+2061-2064",
+            "name": "INVISIBLE MATH OPERATOR",
+            "count": invisible_operators,
+            "context": None,
+        })
+
+    tag_chars = len(TAG_CHARS_RE.findall(FLAG_TAG_SEQUENCE_RE.sub("", text)))
+    if tag_chars:
+        invisible_hits.append({
+            "char": "U+E0001 / U+E0020-E007F",
+            "name": "UNICODE TAG (ASCII SMUGGLING)",
+            "count": tag_chars,
             "context": None,
         })
 
@@ -106,9 +211,16 @@ def watermark_scan(text):
     return {
         "invisible_characters_found": invisible_hits,
         "exotic_spaces_found": exotic_spaces,
-        "curly_quotes": text.count("‘") + text.count("’")
-        + text.count("“") + text.count("”"),
-        "straight_quotes": text.count("'") + text.count('"'),
+        # Double and single quote marks are reported separately -- pooling
+        # them would let the apostrophe-heavy single-quote count (or the
+        # attribute-heavy double-quote count in markup) drown out the other.
+        # Each pair is still a meaningful ratio against itself: an
+        # all-curly-apostrophe draft with no straight apostrophes suggests
+        # auto-curl from a paste; a mix of both suggests multiple sources.
+        "curly_double_quotes": text.count("“") + text.count("”"),
+        "straight_double_quotes": text.count('"'),
+        "curly_single_quotes": text.count("‘") + text.count("’"),
+        "straight_single_quotes": text.count("'"),
         "em_dashes": text.count("—"),
         "en_dashes": text.count("–"),
     }
@@ -347,7 +459,10 @@ def main():
     if len(sys.argv) != 2:
         print("usage: text_metrics.py <path-to-text-file>", file=sys.stderr)
         sys.exit(1)
-    with open(sys.argv[1], "r", encoding="utf-8") as f:
+    # utf-8-sig strips a leading BOM (an ordinary artifact of many editors/
+    # exporters) so only a mid-file BOM -- the actual technical defect --
+    # reaches watermark_scan's ZERO_WIDTH_CHARS check.
+    with open(sys.argv[1], "r", encoding="utf-8-sig") as f:
         text = f.read()
     print(json.dumps(analyze(text), indent=2))
 
