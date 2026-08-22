@@ -146,13 +146,12 @@
                     in the restaurant industry. Three systems, built in the order that
                     let each one pay for the next.</p>
 
-                <p>The sequence was the strategy. Going from an MVP to more than a hundred
-                    outlets in six months doesn't leave room to build three systems in
-                    parallel and integrate them at the end, and it punishes any component
-                    that can't be rolled out to a live kitchen during service. So each
-                    system had to be independently useful on the day it shipped, and each
-                    one had to lower the cost of the next. Merely making it possible
-                    wasn't the bar. That
+                <p>The sequence was the strategy. Rapid outlet growth doesn't leave room
+                    to build three systems in parallel and integrate them at the end, and
+                    it punishes any component that can't be rolled out to a live kitchen
+                    during service. So each system had to be independently useful on the
+                    day it shipped, and each one had to lower the cost of the next. Merely
+                    making it possible wasn't the bar. That
                     ruled out the platform-first approach, where nothing is visible to an
                     operator until the foundations are finished.</p>
 
@@ -183,24 +182,6 @@
                     outage it's meant to catch. A question that could wait for its answer sent the data to the cloud
                     instead.</p>
 
-                <p><strong>Menu planning</strong> was the piece that needed AI to be worth
-                    anything. It uses an LLM with vector search to query product mix data
-                    and infer location-specific variations — the same dish sells
-                    differently two kilometres apart, and the interesting signal lives in
-                    that variation. So the system retrieves the real product mix data at
-                    query time and answers from it, no guessing required.</p>
-
-                <p>The system retrieves against product mix data instead of fine-tuning
-                    a model on it, and that's a cost decision as much
-                    as a quality one. Product mix changes every week. A fine-tuned model
-                    encodes the mix as of the day it was trained and has to be retrained to
-                    learn that a dish stopped selling. Retrieval reads the current numbers
-                    at query time, so the system improves when the data does and there's
-                    no training budget to defend annually. The other half of it is that a
-                    retrieved answer can be traced to the rows it came from, and an
-                    operations manager won't act on a recommendation they can't
-                    interrogate.</p>
-
                 <p>I also took ownership of product management directly, driving the
                     roadmap for B2B value-added services and loyalty features. I owned that
                     roadmap instead of receiving it, which made the sequencing above
@@ -210,7 +191,6 @@
                     being the one accountable for it.</p>
 
                 <ul class="project--impact" role="list">
-                    <li>From MVP to <strong>100+ outlets in 6 months</strong></li>
                     <li><strong>Increased RPR</strong></li>
                 </ul>
             </article>
