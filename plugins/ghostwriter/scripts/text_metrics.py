@@ -127,9 +127,20 @@ FLAG_TAG_SEQUENCE_RE = re.compile(r"\U0001F3F4[\U000E0020-\U000E007A]*\U000E007F
 # extraction. Reported as a count, not treated as a defect on its own.
 EXOTIC_SPACE_CHARS = {
     " ": "NO-BREAK SPACE",
+    " ": "OGHAM SPACE MARK",
+    " ": "EN QUAD",
+    " ": "EM QUAD",
+    " ": "EN SPACE",
+    " ": "EM SPACE",
+    " ": "THREE-PER-EM SPACE",
+    " ": "FOUR-PER-EM SPACE",
+    " ": "SIX-PER-EM SPACE",
     " ": "FIGURE SPACE",
+    " ": "PUNCTUATION SPACE",
     " ": "THIN SPACE",
+    " ": "HAIR SPACE",
     " ": "NARROW NO-BREAK SPACE",
+    " ": "MEDIUM MATHEMATICAL SPACE",
     "　": "IDEOGRAPHIC SPACE",
     "­": "SOFT HYPHEN",
 }
