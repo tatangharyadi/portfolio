@@ -38,7 +38,8 @@ the path doesn't resolve, fall back to `$(git rev-parse --show-toplevel)/plugins
 resolve the repo root explicitly rather than assuming the current working directory is it.
 It computes sentence-length stats,
 paragraph-length-in-sentences, per-paragraph contraction rate and average sentence length,
-overall contraction rate, vocabulary richness (MATTR, MTLD), shared-opener runs, and rhythm runs directly
+overall contraction rate, vocabulary richness (MATTR, MTLD), shared-opener runs, rhythm runs,
+and an invisible-character/watermark scan directly
 from the text — the exact numbers several checks below ask for, without relying on the
 model's own counting. Use its output as the ground truth for those numbers; everything
 qualitative (whether a device recurs, whether a triad is disguised, whether a hedge reads as
@@ -93,6 +94,23 @@ go straight to the fix list in Output.
   settings) does not trigger this gate — it's about claims presented as factual.
 - Evidence: confirm every specific factual claim traces to the user's brief or a source, or
   is marked `[PLACEHOLDER]`. Any unmarked invention presented as fact = FAIL.
+
+**Gate — Invisible characters & watermarking**
+- Check the script's `watermark.invisible_characters_found` output: zero-width spaces/joiners,
+  a mid-file byte-order mark, word joiners, and variation selectors have no legitimate reason
+  to appear in typed prose. Unlike every other check in this skill, this isn't a style
+  judgment — it's a technical defect, most often introduced by copy-pasting from an AI tool or
+  a formatted document, occasionally a deliberate hidden watermark.
+- Zero-tolerance: any non-empty `invisible_characters_found` list FAILS this gate, regardless
+  of count — even one zero-width character is disqualifying, the same way one confirmed triad
+  is.
+- `watermark.exotic_spaces_found` (non-breaking spaces, ideographic spaces, etc.) does NOT gate
+  — these are ordinary characters a human could type deliberately (e.g. copy-pasting from a
+  word processor), so just note the count in the fix list if non-zero; don't fail the gate on
+  them alone.
+- Evidence: quote the `context` field for each hit found, naming the character and its Unicode
+  codepoint. State "0 invisible characters found" explicitly if the scan is clean — don't skip
+  this silently.
 
 **Gate — Structural variety (triads)**
 - Scan for any sentence built as three parallel clauses or items ("There was X...; Y...;
@@ -323,12 +341,18 @@ to 100:
   1 if no unjustified hits, 0.5 for one or two isolated unjustified hits, 0 for a cluster.
 - **Formatting & mechanical tells** — weight 5. Independent of wording, these are
   near-mechanical to check: em dash or en dash use beyond what the persona's punctuation
-  profile documents (a single em dash is not automatically a hit — check it against the
-  persona's actual frequency first); boldface used as a mechanical emphasis tic rather than
-  sparingly; inline-header bullet lists ("**Label:** sentence" repeated down a list); Title
+  profile documents — use the script's `watermark.em_dashes`/`watermark.en_dashes` counts
+  against the persona's documented frequency rather than eyeballing it (a single em dash is
+  not automatically a hit — check it against the persona's actual frequency first); boldface
+  used as a mechanical emphasis tic rather than sparingly; inline-header bullet lists
+  ("**Label:** sentence" repeated down a list); Title
   Case In Headings instead of sentence case; emojis decorating headings or bullets; curly
   quotation marks (" ") stacked with other tells rather than appearing alone (most editors
-  auto-curl, so this one only counts in combination). Take the draft's contraction ratio
+  auto-curl, so this one only counts in combination — the script's `watermark.curly_quotes`
+  vs `watermark.straight_quotes` counts give the ratio, but curly quotes alone are never a
+  hit on their own, only in combination per above). `watermark.exotic_spaces_found`
+  (non-breaking spaces, etc.), if non-zero, is worth a note here too, though it doesn't gate
+  (see the Invisible characters & watermarking hard gate above for what does). Take the draft's contraction ratio
   from the script's `contraction.contraction_rate` output and compare it
   against the `Contraction baseline` line in `writing/persona.md` (if that line is missing
   because the persona predates this check, fall back to judging contraction use against the

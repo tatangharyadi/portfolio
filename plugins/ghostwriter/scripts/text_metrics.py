@@ -41,6 +41,78 @@ WORD_RE = re.compile(r"[A-Za-z']+")
 
 HEADING_RE = re.compile(r"^#{1,6}\s.*$", re.MULTILINE)
 
+# Characters with no legitimate reason to appear in typed prose -- zero-width
+# spacing/joining marks, a mid-file byte-order mark, variation selectors (used
+# by some LLM-watermarking schemes to encode hidden bits), and deprecated
+# invisible separators. Finding any of these is a technical defect, not a
+# style judgment -- unlike NBSP or curly quotes below, which are ordinary
+# characters a human could type deliberately.
+ZERO_WIDTH_CHARS = {
+    "​": "ZERO WIDTH SPACE",
+    "‌": "ZERO WIDTH NON-JOINER",
+    "‍": "ZERO WIDTH JOINER",
+    "⁠": "WORD JOINER",
+    "﻿": "ZERO WIDTH NO-BREAK SPACE (BOM)",
+    "᠎": "MONGOLIAN VOWEL SEPARATOR",
+}
+VARIATION_SELECTOR_RE = re.compile(r"[︀-️\U000E0100-\U000E01EF]")
+
+# Ordinary but non-ASCII spacing characters -- ordinary word processors and
+# copy-paste from formatted documents introduce these routinely, so their
+# presence is reported as a count, not treated as a defect on its own.
+EXOTIC_SPACE_CHARS = {
+    " ": "NO-BREAK SPACE",
+    " ": "FIGURE SPACE",
+    " ": "THIN SPACE",
+    " ": "NARROW NO-BREAK SPACE",
+    "　": "IDEOGRAPHIC SPACE",
+}
+
+
+def watermark_scan(text):
+    """Report invisible/hidden Unicode characters and smart-punctuation counts.
+
+    Zero-width characters, a mid-file BOM, and variation selectors have no
+    legitimate reason to appear in typed prose -- their presence is a
+    technical artifact (often from copy-pasting AI output, sometimes a
+    deliberate LLM watermark) rather than a stylistic choice, so they're
+    reported separately from the exotic-space/dash/quote counts below, which
+    are ordinary characters a human could type on purpose.
+    """
+    invisible_hits = []
+    for ch, name in ZERO_WIDTH_CHARS.items():
+        count = text.count(ch)
+        if count:
+            idx = text.index(ch)
+            invisible_hits.append({
+                "char": f"U+{ord(ch):04X}",
+                "name": name,
+                "count": count,
+                "context": text[max(0, idx - 20):idx + 20].replace("\n", " "),
+            })
+    variation_selectors = len(VARIATION_SELECTOR_RE.findall(text))
+    if variation_selectors:
+        invisible_hits.append({
+            "char": "U+FE00-FE0F / U+E0100-E01EF",
+            "name": "VARIATION SELECTOR",
+            "count": variation_selectors,
+            "context": None,
+        })
+
+    exotic_spaces = {
+        name: text.count(ch) for ch, name in EXOTIC_SPACE_CHARS.items() if text.count(ch)
+    }
+
+    return {
+        "invisible_characters_found": invisible_hits,
+        "exotic_spaces_found": exotic_spaces,
+        "curly_quotes": text.count("‘") + text.count("’")
+        + text.count("“") + text.count("”"),
+        "straight_quotes": text.count("'") + text.count('"'),
+        "em_dashes": text.count("—"),
+        "en_dashes": text.count("–"),
+    }
+
 
 def split_paragraphs(text):
     text = HEADING_RE.sub("", text)
@@ -264,6 +336,7 @@ def analyze(text):
         },
         "contraction": contraction_stats(text),
         "vocabulary": vocabulary_richness(text),
+        "watermark": watermark_scan(text),
         "paragraphs": paragraph_reports,
         "shared_opener_runs": shared_opener_runs(all_sentences),
         "rhythm_runs": rhythm_runs(all_sentences),
